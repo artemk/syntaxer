@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))  #TODO: remove this
+
+require 'optparse'
+require 'ostruct'
+require 'pp'
+
+require 'syntaxer'
+
+class SyntaxerCLI
+
+  def self.parse(args)
+    options = OpenStruct.new  
+    options.config_file = Syntaxer::SYNTAXER_RULES_FILE  
+    options.root_path   = Dir.getwd
+    options.languages   = :all
+
+    opts = OptionParser.new do |opts|
+      opts.banner = "Usage: syntaxer [options]"
+
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      opts.on("-c", "--config [CONFIG_FILE]", String,
+              "Syntax rules file to be used for syntaxer") do |config_file|
+        options.config_file = config_file
+      end
+
+      opts.on("-p", "--path [DIR]", String, "If you want to check files not from current place") do |r|
+        options.root_path = r
+      end
+
+      opts.on("-l", "--languages [ruby, haml, sass]", Array, "List of languages to be used in syntax checking") do |l|
+        options.languages = l
+      end
+
+      opts.on("-r", "--repo [TYPE]", ['git', 'svn'],
+              "Select repository type (git, svn)") do |r|
+        options.repository = r
+      end
+      
+      opts.on("-q", "--quite", "Run in verbose mode") do |r|
+        options.quite = true
+      end
+
+      opts.on("-i", "--install", "Write hooks to git") do |r|
+        options.generate = true
+      end
+
+      opts.separator ""
+      opts.separator "Common options:"
+
+      opts.on_tail("-h", "--help", "Show this message") do
+        puts opts
+        exit
+      end
+
+      opts.on_tail("--version", "Show version") do
+        puts Syntaxer::VERSION
+        exit
+      end
+    end
+
+    opts.parse!(args)
+    options
+  end
+
+end
+
+options = SyntaxerCLI.parse(ARGV)
+if options.generate.nil?
+  Syntaxer.check_syntax(options.instance_variable_get("@table"))
+else
+  Syntaxer.make_hook(options.instance_variable_get("@table"))
+end
+

@@ -1,0 +1,104 @@
+= syntaxer
+
+== Overview
+
+Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository.
+When syntaxer is used with git it checks syntax in added and changed files before every commit and stop it if there are an error in some of the files.
+
+== Installation
+
+To install syntaxer run
+
+  sudo gem install syntaxer
+
+== Usage
+
+== Syntaxer with rails
+
+Example of usage:
+
+Run syntax checking in current directory recursively
+
+  syntaxer
+
+Run syntax checking in another directory recursively
+
+  syntaxer -p ./developement
+
+Install hook to git repository in current directory
+
+  syntaxer -i -r git
+
+Indicate custom config file
+
+  syntaxer -c config.rb
+
+
+Describe your rules in syntaxer.rb file and put in "initializers" folder for rails
+
+Example of syntaxer.rb file:
+
+  syntaxer do
+    languages :ruby, :haml, :sass do         # type of files to be watched
+      folders 'app/**/*', 'lib/**/*'               # folders to be checked
+    end               
+  end
+
+You can specify multiple rules, for example you want to check only ruby files in app/controllers/* and only haml in app/views/*, you can write the next in your "initializers/syntaxer.rb" file:
+
+  syntaxer do
+    languages :ruby do
+      folders 'app/controllers/*'
+    end
+  
+    lang :haml do  # lang is an alias for languages
+      f 'app/views/*' #f is an alias for folders    
+    end
+    
+    #all supported types at app/**
+    languages :all do
+      folders 'app/**'
+    end
+  
+    ignore_folders 'app/models/**' # this folders will be deleted from all languages
+  end
+
+
+Languages available for now are: ruby, erb, haml, sass. But you can extend this by your own, how to do that i will describe below.
+
+
+Options for usage
+  -c, --config          specify config file
+  -p, --path            path for syntax check. If this option is not specify it checks files from current directory
+  -l, --languages       specify language for check. Available sass, haml and ruby. By default check all of them.
+  -r, --repo            indicate type of repository. Available git and svn at this time.
+  -i, --install         generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
+  -q, --quite           disable information messages.
+  -h, --help            show help and options describe above.
+
+== Contributing to syntaxer
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== TODO
+
+* Have to fix the problem with only created repository and initial commit with GIT reposytory
+* Add SVN support
+
+== Author
+
+Artyom Kramarenko (artemk) Svitla Systems Inc (svitla.com)
+
+== Contributors
+
+Artem Melnikov (ignar) Svitla Systems Inc (svitla.com)
+
+== Copyright
+
+See LICENSE.txt for further details.

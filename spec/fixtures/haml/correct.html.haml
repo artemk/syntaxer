@@ -1,0 +1,4 @@
+- pretty_dialog :title => "Confirm Delete", :style => "display:none;", :id => "interview_confirm_delete_dialog" do |d|
+  %p.center Are you sure you want to delete this interview from your list?
+  = d.button :ok, :text => "Yes"
+  = d.button :cancel, :class => "cancel", :text => "No"

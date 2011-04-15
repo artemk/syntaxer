@@ -1,0 +1,5 @@
+class A
+  def some_method
+    puts "Do nothing"
+  end
+end
