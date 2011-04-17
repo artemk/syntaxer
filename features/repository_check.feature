@@ -8,6 +8,6 @@ Feature: Check git repository before commit
   @repo
   Scenario: Run "git commit"
     Given git repository
-    And some file with worng syntax
+    And some file with wrong syntax
     When run `git commit -m "some message"` interactively
     Then the syntaxer should stop commit

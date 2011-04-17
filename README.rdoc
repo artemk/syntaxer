@@ -11,9 +11,8 @@ To install syntaxer run
 
   sudo gem install syntaxer
 
-== Usage
 
-== Syntaxer with rails
+== Usage
 
 Example of usage:
 
@@ -88,16 +87,20 @@ Options for usage
 
 == TODO
 
-* Have to fix the problem with only created repository and initial commit with GIT reposytory
+* Have to fix the problem with only created repository and initial commit with GIT repository
 * Add SVN support
+
+== Known problems
+* Git gem doesn't work properly on the very first commit.
+
 
 == Author
 
-Artyom Kramarenko (artemk) Svitla Systems Inc (svitla.com)
+Artyom Kramarenko (artemk) Svitla Systems Inc (www.svitla.com)
 
 == Contributors
 
-Artem Melnikov (ignar) Svitla Systems Inc (svitla.com)
+Artem Melnikov (ignar) Svitla Systems Inc (www.svitla.com)
 
 == Copyright
 

@@ -1,7 +1,7 @@
 module PlainHelpers
   @tmp_dir
   def temp_dir
-    tmpdir = File.expand_path current_dir #"#{Time.now.to_i}"
+    tmpdir = File.expand_path current_dir
     @tmp_dir = tmpdir
     tmpdir
   end
@@ -31,15 +31,19 @@ module PlainHelpers
   
   def create_temp_plain_work_dir
     tmp = create_tmp_dir
+    
     in_current_dir do
       add_fixtures_files
     end
+    
   end
 
   def create_temp_repo_work_dir
     create_tmp_dir
-    g = Git.init(File.expand_path(File.join(@tmp_dir)))
+    
+    g = Git.init(File.expand_path(File.join(@tmp_dir)))    
     FileUtils.touch(File.join(@tmp_dir,'README'))
+    
     g.add('.')
     g.commit('first commit')
   end
@@ -56,16 +60,11 @@ module PlainHelpers
   end
 
   def make_git_commit
-    g = Git.open File.expand_path(@tmp_dir) #(File.expand_path(File.join(current_dir)))
+    g = Git.open File.expand_path(@tmp_dir) 
     g.add
-    #pp File.expand_path(current_dir)
-    #Dir.chdir(File.expand_path(current_dir)) do
-      #g = Git.open Dir.pwd
-      #g.add
-    Dir.chdir(current_dir)
-      g.commit('second commit')
-    #end
     
+    Dir.chdir(current_dir)
+    g.commit('second commit')    
   end
 
 end

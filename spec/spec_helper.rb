@@ -9,8 +9,6 @@ require "tmpdir"
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
-# RSpec.configure do |config|
-# end
 
 ROOT = File.join(File.dirname(__FILE__), '..')
 
@@ -40,6 +38,7 @@ end
 
 def make_git_add(ruby_repo_dir)
   g = Git.open(Dir.new(ruby_repo_dir))
+  
   g.chdir do
     g.add('.')
   end
@@ -48,23 +47,29 @@ end
 def make_initial_commit(ruby_repo_dir)
   g = Git.open(Dir.new(ruby_repo_dir))
   FileUtils.touch(File.join(ruby_repo_dir, 'README'))
+  
   make_git_add(ruby_repo_dir)
   g.commit('first commit')
+  
 end
 
 def make_commit(ruby_repo_dir)
   g = Git.open(Dir.new(ruby_repo_dir))
+  
   g.chdir do
     g.commit('second commit')
   end
+  
 end
 
 def add_hook(ruby_repo_dir)
-  bin_file = File.join(File.expand_path('../'),'syntaxer/bin', 'syntaxer')
+  bin_file = File.join(ROOT,'bin', 'syntaxer')  
   hook_file = File.join(ruby_repo_dir,'.git/hooks/pre-commit')
+  
   File.open(hook_file, 'w') do |f|
     f.puts "#{bin_file} -c #{syntaxer_rules_example_file('syntaxer_rules_git')} -r git -p #{ruby_repo_dir}"
   end
+  
   File.chmod(0755, hook_file)
 end
 

@@ -1,4 +1,4 @@
-Given /^directory containt two files$/ do
+Given /^directory contains two files$/ do
   create_temp_plain_work_dir
 end
 
