@@ -9,7 +9,7 @@ When syntaxer is used with git it checks syntax in added and changed files befor
 
 To install syntaxer run
 
-  sudo gem install syntaxer
+  [sudo] gem install syntaxer
 
 
 == Usage
