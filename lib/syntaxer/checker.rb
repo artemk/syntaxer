@@ -5,30 +5,9 @@ module Syntaxer
     include Open3
     extend Forwardable
 
-    # Does not working
     def_delegators Syntaxer::FileStatus, :error_files, :fine_files      
          
     attr_accessor :syntaxer, :reader
-
-    # List of files with correct syntax
-    #
-    # @return [Array<FileStatus>, #each] array with files
-    #
-    # @see FileStatus#fine_files
-    
-    def self.fine_files
-      FileStatus.fine_files
-    end
-
-    # List of files with wrong syntax
-    #
-    # @return [Array<FileStatus>, #each] array with files
-    #
-    # @see FileStatus#fine_files
-
-    def self.error_files
-      FileStatus.error_files
-    end
     
     def initialize(syntaxer)
       @syntaxer = syntaxer
@@ -81,7 +60,8 @@ module Syntaxer
           FileStatus.build(file, errors)
         end
       end
-      FileStatus
+      
+      self
     end
 
     private
@@ -107,7 +87,8 @@ module Syntaxer
           FileStatus.build(file, errors)
         end
       end
-      FileStatus
+      
+      self
     end
 
   end

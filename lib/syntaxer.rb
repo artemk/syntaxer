@@ -7,7 +7,6 @@ require File.join(%w{syntaxer file_status})
 require File.join(%w{syntaxer checker})
 require File.join(%w{syntaxer repository})
 require File.join(%w{syntaxer language_definition})
-require File.join(%w{syntaxer version})
 require File.join(%w{syntaxer printer})
 
 module Syntaxer
@@ -34,11 +33,11 @@ module Syntaxer
     def check_syntax(options = {})
       @root_path = options[:root_path]
       Printer.quite = options[:quite] || false
+      
       @reader = Reader::DSLReader.load(options[:config_file])
       @repository = Repository.factory(@root_path, options[:repository]) if options[:repository]
       
-      Checker.process(self)
-      error_files = Checker.error_files
+      error_files = Checker.process(self).error_files
       Printer.print_result error_files
       exit(1) unless error_files.empty?
     end

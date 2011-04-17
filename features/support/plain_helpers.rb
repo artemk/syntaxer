@@ -1,4 +1,6 @@
 module PlainHelpers
+  SYNTAXER_ROOT_PATH = File.join(File.dirname(__FILE__), '..', '..')
+  
   @tmp_dir
   def temp_dir
     tmpdir = File.expand_path current_dir

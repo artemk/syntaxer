@@ -57,7 +57,7 @@ class SyntaxerCLI
       end
 
       opts.on_tail("--version", "Show version") do
-        puts Syntaxer::VERSION
+        puts IO.readlines('../VERSION','').first.to_s
         exit
       end
     end
