@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))  #TODO: remove this
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'optparse'
 require 'ostruct'
@@ -31,9 +31,9 @@ class SyntaxerCLI
         options.root_path = r
       end
 
-      opts.on("-l", "--languages [ruby, haml, sass]", Array, "List of languages to be used in syntax checking") do |l|
-        options.languages = l
-      end
+      # opts.on("-l", "--languages [ruby, haml, sass]", Array, "List of languages to be used in syntax checking") do |l|
+      #   options.languages = l
+      # end
 
       opts.on("-r", "--repo [TYPE]", ['git', 'svn'],
               "Select repository type (git, svn)") do |r|
@@ -57,7 +57,7 @@ class SyntaxerCLI
       end
 
       opts.on_tail("--version", "Show version") do
-        puts IO.readlines('../VERSION','').first.to_s
+        puts IO.readlines(File.join(File.dirname(__FILE__), '..', 'VERSION'),'').first.to_s
         exit
       end
     end

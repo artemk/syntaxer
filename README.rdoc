@@ -2,8 +2,8 @@
 
 == Overview
 
-Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository.
-When syntaxer is used with git it checks syntax in added and changed files before every commit and stop it if there are an error in some of the files.
+Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository for checking changed and added files only.
+It is useful for for rails team, because you need to store only 
 
 == Installation
 
@@ -12,6 +12,8 @@ To install syntaxer run
   [sudo] gem install syntaxer
   
   For now only works with ruby 1.9.2
+
+== Fast Usage for Rails team
 
 == Usage
 
