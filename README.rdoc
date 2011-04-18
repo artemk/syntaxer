@@ -11,7 +11,6 @@ To install syntaxer run
 
   [sudo] gem install syntaxer
 
-
 == Usage
 
 Example of usage:
@@ -89,10 +88,12 @@ Options for usage
 
 * Have to fix the problem with only created repository and initial commit with GIT repository
 * Add SVN support
+* Add Progress bar to see the progress of checking files https://github.com/paul/progress_bar
+* Add description on how to add new languages
 
 == Known problems
-* Git gem doesn't work properly on the very first commit.
 
+* Git gem doesn't work properly on the very first commit.
 
 == Author
 
