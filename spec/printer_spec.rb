@@ -9,11 +9,9 @@ describe "Syntaxer" do
     subject{Syntaxer::Printer}
 
     it "should be quite if passed --quite option" do
-      IO.should_not_receive(:print)
-      IO.should_not_receive(:puts)
-
+      ProgressBar.new.should_not_receive(:update)
       subject.quite = true
-      subject.print_progress true
+      subject.update true
       subject.print_result ['a','b']
     end
   end

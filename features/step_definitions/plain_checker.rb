@@ -7,6 +7,6 @@ When /^I cd to working directory$/ do
 end
 
 Then /^the output should be the same as in "(.*)" file$/ do |f|
-  content = IO.readlines(File.join(SYNTAXER_ROOT_PATH, f),'').first.to_s
-  Then %{the output should contain "#{content}"}  
+  content = IO.readlines(File.join(PlainHelpers::SYNTAXER_ROOT_PATH, f),'').first.to_s
+  Then %{the output should contain exactly "#{content}\n"}
 end

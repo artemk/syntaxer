@@ -7,7 +7,8 @@ describe "Syntaxer::Checker" do
     before(:each) do
       reader = mock('Reader')
       reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -wc %filename%")])
-      Syntaxer.should_receive(:reader).and_return(reader)
+      reader.stub!(:files_count).and_return(2)
+      Syntaxer.should_receive(:reader).any_number_of_times.and_return(reader)
       Syntaxer.stub!(:root_path).and_return(fixtures_path(:ruby))
 
       Syntaxer::Printer.stub!(:print_result)

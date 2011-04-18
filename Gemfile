@@ -5,6 +5,7 @@ gem "git"
 
 #for colorizing output
 gem "rainbow"
+gem "progress_bar"
 
 group :development do
   gem "rspec", ">= 2.5.0"

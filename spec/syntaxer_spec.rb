@@ -23,7 +23,7 @@ describe "Syntaxer" do
       add_file_to_repo(:ruby, @repo_dir, "wrong.rb.example")
       make_git_add(@repo_dir)
       add_hook @repo_dir
-      g = Git.open(Dir.new(@repo_dir))
+      g = Git.open(File.expand_path(@repo_dir))
       g.chdir do
         lambda {g.commit('second commit')}.should raise_exception
       end
@@ -33,7 +33,7 @@ describe "Syntaxer" do
       add_file_to_repo(:ruby, @repo_dir, "correct.rb.example")
       make_git_add(@repo_dir)
       add_hook @repo_dir
-      g = Git.open(Dir.new(@repo_dir))
+      g = Git.open(File.expand_path(@repo_dir))
       g.chdir do
         lambda {g.commit('second commit')}.should_not raise_exception
       end

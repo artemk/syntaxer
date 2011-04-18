@@ -13,6 +13,12 @@ module Syntaxer
         @rules = LanguageRules.new
         @ignore_folders = []
       end
+
+      def files_count syntaxer
+        @rules.map{ |rule|
+          rule.files_list(syntaxer.root_path).length
+        }.inject(:+)
+      end
             
       class << self
         
@@ -58,7 +64,6 @@ module Syntaxer
       #   | 
       def parse(dsl_data)
         self.instance_eval(dsl_data)
-        @rules << @current_rule
       rescue SyntaxError, NoMethodError, NameError => e
         raise DSLSyntaxError, "Illegal DSL syntax: #{e}"
       end

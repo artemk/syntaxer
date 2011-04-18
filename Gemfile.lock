@@ -15,16 +15,23 @@ GEM
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.5)
     diff-lcs (1.1.2)
+    fattr (2.2.0)
     ffi (1.0.7)
       rake (>= 0.8.7)
     gherkin (2.3.5)
       json (>= 1.4.6)
     git (1.2.5)
+    highline (1.6.1)
     jeweler (1.5.2)
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
     json (1.5.1)
+    options (2.3.0)
+      fattr
+    progress_bar (0.3.4)
+      highline (~> 1.6.1)
+      options (~> 2.3.0)
     rainbow (1.1.1)
     rake (0.8.7)
     rspec (2.5.0)
@@ -46,6 +53,7 @@ DEPENDENCIES
   cucumber
   git
   jeweler (~> 1.5.2)
+  progress_bar
   rainbow
   rspec (>= 2.5.0)
   yard (~> 0.6.0)
