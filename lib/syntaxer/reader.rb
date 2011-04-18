@@ -64,7 +64,6 @@ module Syntaxer
       #   | 
       def parse(dsl_data)
         self.instance_eval(dsl_data)
-        @rules << @current_rule
       rescue SyntaxError, NoMethodError, NameError => e
         raise DSLSyntaxError, "Illegal DSL syntax: #{e}"
       end
