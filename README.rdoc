@@ -10,6 +10,8 @@ When syntaxer is used with git it checks syntax in added and changed files befor
 To install syntaxer run
 
   [sudo] gem install syntaxer
+  
+  For now only works with ruby 1.9.2
 
 == Usage
 
@@ -62,7 +64,7 @@ You can specify multiple rules, for example you want to check only ruby files in
   end
 
 
-Languages available for now are: ruby, erb, haml, sass. But you can extend this by your own, how to do that i will describe below.
+Languages available for now are: ruby, erb, haml, sass. You can extend this by your own, how to do that will be described below.
 
 
 Options for usage
@@ -90,6 +92,7 @@ Options for usage
 * Add SVN support
 * Add Progress bar to see the progress of checking files https://github.com/paul/progress_bar
 * Add description on how to add new languages
+* Add support for ruby 1.8.7 
 
 == Known problems
 
