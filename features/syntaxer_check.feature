@@ -9,5 +9,5 @@ Feature: Test options
   Scenario: Run version checking
     When I run `syntaxer -v`
     Then the exit status should be 0
-    Then the output should be the same as in "VERSION" file
+    And the output should be the same as in "VERSION" file
 
