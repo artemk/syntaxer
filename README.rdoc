@@ -11,7 +11,7 @@ To install syntaxer run
 
   [sudo] gem install syntaxer
   
-  For now only works with ruby 1.9.2
+ Works with 1.8.x and 1.9.x
 
 == Fast Usage for Rails team
 
@@ -23,9 +23,9 @@ Run syntax checking in current directory recursively
 
   syntaxer
 
-Run syntax checking in another directory recursively
+Run syntax checking in another directory recursively. Make sure to add '/' at the end.
 
-  syntaxer -p ./developement
+  syntaxer -p ./developement/
 
 Install hook to git repository in current directory
 
@@ -72,10 +72,9 @@ Languages available for now are: ruby, erb, haml, sass. You can extend this by y
 Options for usage
   -c, --config          specify config file
   -p, --path            path for syntax check. If this option is not specify it checks files from current directory
-  -l, --languages       specify language for check. Available sass, haml and ruby. By default check all of them.
   -r, --repo            indicate type of repository. Available git and svn at this time.
   -i, --install         generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
-  -q, --quite           disable information messages.
+  -q, --quite           disable information messages. Is needed when you only want to know the result: 1 or 0
   -h, --help            show help and options describe above.
 
 == Contributing to syntaxer
@@ -92,9 +91,7 @@ Options for usage
 
 * Have to fix the problem with only created repository and initial commit with GIT repository
 * Add SVN support
-* Add Progress bar to see the progress of checking files https://github.com/paul/progress_bar
 * Add description on how to add new languages
-* Add support for ruby 1.8.7 
 
 == Known problems
 
