@@ -17,11 +17,11 @@ module Syntaxer
   
   class Git
     require "git"
-        
+
     def initialize(repo_path)
-      @repository = ::Git.open(Dir.new(repo_path))
+      @repository = ::Git.open(File.expand_path(repo_path))
     rescue ArgumentError => ex
-        raise GitRepositoryError, "The path you specified is not a git repository: '#{File.expand_path(repo_path)}'"
+      raise GitRepositoryError, "The path you specified is not a git repository: '#{File.expand_path(repo_path)}'"
     end
 
     # Returns list of files what have been changed
@@ -30,7 +30,7 @@ module Syntaxer
 
     def changed_files
       @repository.chdir do
-        @changed ||= @repository.status.changed.keys
+        @changed ||= @repository.status.changed.to_a.map(&:first)
       end
     end
 
@@ -40,7 +40,7 @@ module Syntaxer
     
     def added_files
       @repository.chdir do
-        @added ||= @repository.status.added.keys
+        @added ||= @repository.status.added.to_a.map(&:first)
       end
     end
 
@@ -49,21 +49,20 @@ module Syntaxer
     # @return [Array]
     
     def changed_and_added_files
+      check_repo
       changed_files + added_files
-    rescue
-      []
     end
-=begin
+
     private
-    def check_repo repository
+    def check_repo
       @logs = @repository.log
       @logs.first
     rescue ::Git::GitExecuteError => e
-      puts "\nRepository is empty. There are no any revision.".color(:red)
+      puts "We can not find new or changed files. Log history is empty.\nPlease make first commit.".color(:red)
       raise e
       exit 1
     end
-=end
+
   end
   
   

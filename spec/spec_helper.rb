@@ -37,7 +37,7 @@ def add_file_to_repo(lang, repo_dir, file_name)
 end
 
 def make_git_add(ruby_repo_dir)
-  g = Git.open(Dir.new(ruby_repo_dir))
+  g = Git.open(File.expand_path(ruby_repo_dir))
   
   g.chdir do
     g.add('.')
@@ -45,7 +45,7 @@ def make_git_add(ruby_repo_dir)
 end
 
 def make_initial_commit(ruby_repo_dir)
-  g = Git.open(Dir.new(ruby_repo_dir))
+  g = Git.open(File.expand_path(ruby_repo_dir))
   FileUtils.touch(File.join(ruby_repo_dir, 'README'))
   
   make_git_add(ruby_repo_dir)
@@ -54,7 +54,7 @@ def make_initial_commit(ruby_repo_dir)
 end
 
 def make_commit(ruby_repo_dir)
-  g = Git.open(Dir.new(ruby_repo_dir))
+  g = Git.open(File.expand_path(ruby_repo_dir))
   
   g.chdir do
     g.commit('second commit')

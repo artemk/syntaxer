@@ -57,7 +57,7 @@ class SyntaxerCLI
       end
 
       opts.on_tail("--version", "Show version") do
-        puts IO.readlines('../VERSION','').first.to_s
+        puts IO.readlines(File.join(File.expand_path('../', File.dirname(__FILE__)), 'VERSION'),'').first.to_s
         exit
       end
     end

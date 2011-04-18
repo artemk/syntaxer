@@ -5,19 +5,23 @@ module Syntaxer
 
   class Printer
     class << self
+      @@bar = nil
       attr_accessor :quite
 
-      # Print progress in dot notation
+      # Set count of files for progress bar
+      #
+      # @param [Integer] count of files
+
+      def count_of_files count
+        @@bar = ProgressBar.new(count, :bar, :counter)
+      end
+
+      # Show progress
       #
       # @param [Boolean] (true|false)
 
-      def print_progress succ = true
-        if succ
-          s = '.'.color(:green)
-        else
-          s = 'E'.color(:red)
-        end
-        print s unless @quite
+      def update status
+        @@bar.increment! unless @quite
       end
 
       # Print error message for each if file
@@ -28,6 +32,7 @@ module Syntaxer
         return if @quite
         puts "\n"
         puts "Syntax OK".color(:green) if files.empty?
+        puts "Errors:".color(:red) unless files.empty?
 
         files.each do |file|
           puts file.file_name

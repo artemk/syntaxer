@@ -1,18 +1,21 @@
-#       Rake::FileList
 require 'set'
+require "observer"
 module Syntaxer
   class Checker
     include Open3
+    include Observable
     extend Forwardable
 
     def_delegators Syntaxer::FileStatus, :error_files, :fine_files      
          
     attr_accessor :syntaxer, :reader
     
-    def initialize(syntaxer)
+    def initialize(syntaxer, count)
+      Printer.count_of_files count
+      add_observer(Printer)
       @syntaxer = syntaxer
       @reader = @syntaxer.reader
-      @results = []   
+      @results = []
     end
 
     # Factory for checker
@@ -26,12 +29,23 @@ module Syntaxer
         PlainChecker.new(syntaxer).process
       end
     end
+
+    protected
+    def check rule, file
+      popen3(rule.exec_rule.gsub('%filename%', file)) do |stdin, stdout, stderr, wait_thr|
+        stderr.read.split("\n")
+      end
+    end
          
   end
 
   # Check status of files in repository
 
   class RepoChecker < Checker
+
+    def initialize syntaxer
+      super syntaxer, syntaxer.repository.changed_and_added_files.length
+    end
 
     # Check syntax in repository directory
     #
@@ -51,13 +65,11 @@ module Syntaxer
         end
 
         files_collection.each do |file|
-          errors = nil
           full_path = File.join(@syntaxer.root_path,file)
-          stdout, stderr, status = capture3(rule.exec_rule.gsub('%filename%', full_path))
-          errors = stderr.split("\n")
-
-          Printer.print_progress errors.empty?
+          errors = check(rule, full_path)
           FileStatus.build(file, errors)
+          changed
+          notify_observers(errors.empty?)
         end
       end
       
@@ -72,6 +84,10 @@ module Syntaxer
 
   class PlainChecker < Checker
 
+    def initialize syntaxer
+      super syntaxer, syntaxer.reader.files_count(syntaxer)
+    end
+
     # Check syntax in indicated directory
     #
     # @see Checker#process
@@ -79,12 +95,10 @@ module Syntaxer
     def process
       @reader.rules.each do |rule|
         rule.files_list(@syntaxer.root_path).each do |file|
-          errors = nil
-          stdout, stderr, status = capture3(rule.exec_rule.gsub('%filename%', file))
-          errors = stderr.split("\n")
-          
-          Printer.print_progress errors.empty?
+          errors = check(rule, file)
           FileStatus.build(file, errors)
+          changed
+          notify_observers(errors.empty?)
         end
       end
       

@@ -7,7 +7,7 @@ Feature: Test options
 
   @plain
   Scenario: Run version checking
-    When I run `syntaxer -v` interactively
-    Then the exit status should not be 0
-    And the output should be the same as in "VERSION" file
+    When I run `syntaxer -v`
+    Then the exit status should be 0
+    Then the output should be the same as in "VERSION" file
 

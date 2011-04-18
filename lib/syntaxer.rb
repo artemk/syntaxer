@@ -1,3 +1,4 @@
+require "rubygems"
 require "rake"
 require "open3"
 require "forwardable"
@@ -8,6 +9,7 @@ require File.join(%w{syntaxer checker})
 require File.join(%w{syntaxer repository})
 require File.join(%w{syntaxer language_definition})
 require File.join(%w{syntaxer printer})
+require 'progress_bar'
 
 module Syntaxer
   DEFAULT_FILES_MASK = "**/*"

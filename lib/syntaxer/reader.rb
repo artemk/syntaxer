@@ -13,6 +13,12 @@ module Syntaxer
         @rules = LanguageRules.new
         @ignore_folders = []
       end
+
+      def files_count syntaxer
+        @rules.map{ |rule|
+          rule.files_list(syntaxer.root_path).length
+        }.inject(:+)
+      end
             
       class << self
         
