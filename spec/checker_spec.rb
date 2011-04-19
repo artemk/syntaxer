@@ -7,7 +7,7 @@ describe "Syntaxer::Checker" do
     before(:each) do
       reader = mock('Reader')
       reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -wc %filename%")])
-      reader.stub!(:files_count).and_return(2)
+      reader.stub!(:files_count).and_return(3)
       Syntaxer.should_receive(:reader).any_number_of_times.and_return(reader)
       Syntaxer.stub!(:root_path).and_return(fixtures_path(:ruby))
 
@@ -22,12 +22,12 @@ describe "Syntaxer::Checker" do
 
     it "should return correct error_files " do
       subject.process
-      subject.fine_files.size.should == 1      
-      subject.error_files.size.should == 1
+      subject.fine_files.size.should == 1
+      subject.error_files.size.should == 2
     end
     
     it "should send to FileStatus" do
-      Syntaxer::FileStatus.should_receive(:build).twice
+      Syntaxer::FileStatus.should_receive(:build).exactly(3).times
       subject.process      
     end
   end

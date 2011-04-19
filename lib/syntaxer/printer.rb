@@ -1,4 +1,3 @@
-require "rainbow"
 module Syntaxer
 
   # Print system messages
@@ -6,7 +5,8 @@ module Syntaxer
   class Printer
     class << self
       @@bar = nil
-      attr_accessor :quite
+      @@all_files = []
+      attr_accessor :quite, :verbose
 
       # Set count of files for progress bar
       #
@@ -28,19 +28,28 @@ module Syntaxer
       #
       # @param [Array, #each] files
 
-      def print_result files
+      def print_result checker
         return if @quite
         puts "\n"
-        puts "Syntax OK".color(:green) if files.empty?
-        puts "Errors:".color(:red) unless files.empty?
+        puts "Syntax OK".color(:green) if checker.error_files.empty?
 
+        @verbose ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
-          puts file.file_name
-          file.errors.each do |error|
-            puts "\t #{error}".color(:red)
-          end
+          print_message(file)
         end
       end
+
+      def print_message filestatus
+        return if @quite
+        puts "\n"
+        print filestatus.file_name
+        puts " OK".color(:green) if filestatus.status == :ok && @verbose
+        puts "\nErrors:".color(:red) if filestatus.status == :failed
+        filestatus.errors.each do |error|
+          puts "\t #{error}".color(:red)
+        end
+      end
+
     end
   end
 end

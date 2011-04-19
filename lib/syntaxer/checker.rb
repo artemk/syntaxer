@@ -6,8 +6,8 @@ module Syntaxer
     include Observable
     extend Forwardable
 
-    def_delegators Syntaxer::FileStatus, :error_files, :fine_files      
-         
+    def_delegators Syntaxer::FileStatus, :error_files, :all_files
+    
     attr_accessor :syntaxer, :reader
     
     def initialize(syntaxer, count)

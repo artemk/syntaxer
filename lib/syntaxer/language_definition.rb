@@ -9,6 +9,7 @@ module Syntaxer
     
     
     def files_list(root_path)
+      root_path += "/" if root_path.match(/\/$/).nil?
       main_rule = folders.map{|f| root_path + f + ".\{#{extensions.join(',')}\}"}
       list = Rake::FileList.new(main_rule) do |fl|              
         #fl.add(specific_files) if specific_files  TODO:fix this

@@ -3,6 +3,7 @@ require "rake"
 require "open3"
 require "forwardable"
 require "git"
+require "rainbow"
 require File.join(%w{syntaxer reader})
 require File.join(%w{syntaxer file_status})
 require File.join(%w{syntaxer checker})
@@ -35,13 +36,14 @@ module Syntaxer
     def check_syntax(options = {})
       @root_path = options[:root_path]
       Printer.quite = options[:quite] || false
+      Printer.verbose = options[:verbose] || false 
       
       @reader = Reader::DSLReader.load(options[:config_file])
       @repository = Repository.factory(@root_path, options[:repository]) if options[:repository]
       
-      error_files = Checker.process(self).error_files
-      Printer.print_result error_files
-      exit(1) unless error_files.empty?
+      checker = Checker.process(self)
+      Printer.print_result checker
+      exit(1) unless checker.error_files.empty?
     end
 
     # This method generate and put hook to .git/hooks
