@@ -27,7 +27,7 @@ describe "LanguageRules" do
   
   context "LanguageDefinition" do
     it "#file_list should return correct file list based on rules" do
-      correct_array = Rake::FileList.new(File.dirname(__FILE__) + '/fixtures/ruby/*')
+      correct_array = Rake::FileList.new(File.dirname(__FILE__) + '/fixtures/ruby/**/*.example')
       ld = Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "`ruby -wc %filename%`")
       ld.files_list(File.dirname(__FILE__) + '/fixtures/').should == correct_array
     end

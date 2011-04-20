@@ -6,13 +6,19 @@ describe "Syntaxer" do
   it {should respond_to(:check_syntax)}
 
   context "in plain mode" do
+    before(:all) do
+      Syntaxer::Printer.stub!(:print_result)
+      Syntaxer::Printer.stub!(:print_message)
+      Syntaxer::Printer.stub!(:update)
+    end
+    
     it "should exit with error if where is syntax mistake" do
       lambda{ subject.check_syntax({:root_path => fixtures_path, :config_file => syntaxer_rules_example_file}) }.should raise_exception
     end
   end
 
   context "checking GIT repo" do
-    
+
     before(:each) do
       @repo_dir = create_temp_ruby_project
       make_initial_commit(@repo_dir)

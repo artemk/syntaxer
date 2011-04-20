@@ -15,3 +15,12 @@ end
 Then /^the syntaxer should stop commit$/ do
   lambda{make_git_commit}.should raise_exception
 end
+
+Given /^I init empty repository$/ do
+  run_simple(unescape("git init"), false)
+end
+
+Given /^I make first commit$/ do
+  run_simple(unescape("git add ."), false)
+  run_simple(unescape("git commit -m 'first commit'"), false)
+end

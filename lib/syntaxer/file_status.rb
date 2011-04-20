@@ -4,7 +4,7 @@ module Syntaxer
 
   class FileStatus
     @@error_files = []
-    @@fine_files = []
+    @@all_files = []
     
     attr_reader :file_name, :status, :errors
     
@@ -17,15 +17,16 @@ module Syntaxer
     class << self
       def build(file_name, errors = [])
         file_status = new(file_name, errors)
-        errors.empty? ? @@fine_files << file_status : @@error_files << file_status
+        @@all_files << file_status
+        @@error_files << file_status unless errors.empty?
       end   
       
       def error_files
-         @@error_files
+        @@error_files
       end
 
-      def fine_files
-        @@fine_files
+      def all_files
+        @@all_files
       end
          
     end
