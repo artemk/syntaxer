@@ -36,7 +36,7 @@ module Syntaxer
     def check_syntax(options = {})
       @root_path = options[:root_path]
       Printer.quite = options[:quite] || false
-      Printer.verbose = options[:verbose] || false 
+      Printer.loud = options[:loud] || false 
       
       @reader = Reader::DSLReader.load(options[:config_file])
       @repository = Repository.factory(@root_path, options[:repository]) if options[:repository]

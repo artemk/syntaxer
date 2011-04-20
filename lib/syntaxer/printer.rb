@@ -6,7 +6,7 @@ module Syntaxer
     class << self
       @@bar = nil
       @@all_files = []
-      attr_accessor :quite, :verbose
+      attr_accessor :quite, :loud
 
       # Set count of files for progress bar
       #
@@ -33,7 +33,7 @@ module Syntaxer
         puts "\n"
         puts "Syntax OK".color(:green) if checker.error_files.empty?
 
-        @verbose ? (files = checker.all_files) : (files = checker.error_files)
+        @loud ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
           print_message(file)
         end
@@ -43,7 +43,7 @@ module Syntaxer
         return if @quite
         puts "\n"
         print filestatus.file_name
-        puts " OK".color(:green) if filestatus.status == :ok && @verbose
+        puts " OK".color(:green) if filestatus.status == :ok && @loud
         puts "\nErrors:".color(:red) if filestatus.status == :failed
         filestatus.errors.each do |error|
           puts "\t #{error}".color(:red)

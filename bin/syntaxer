@@ -44,8 +44,8 @@ class SyntaxerCLI
         options.quite = true
       end
 
-      opts.on("-v", "--verbose", "Run in verbose mode") do |r|
-        options.verbose = true
+      opts.on("-l", "--loud", "Run in loud mode") do |r|
+        options.loud = true
       end
 
       opts.on("-i", "--install", "Write hooks to git") do |r|
