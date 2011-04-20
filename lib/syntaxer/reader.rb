@@ -126,7 +126,7 @@ module Syntaxer
             
       def exec_rule(exec_string)
         current_rule.executor = exec_string.scan(/\w+/).first
-        current_rule.exec_existence = system("which #{current_rule.executor}")
+        current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
         current_rule.exec_rule = exec_string    
       end
       

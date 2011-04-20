@@ -82,32 +82,6 @@ module Syntaxer
         end
       end
 
-      
-=begin        
-        files_collection = []
-        rule.extensions.each do |ext|
-          files.each do |file|
-            if file.include?(ext) && !checked_files.include?(file)
-              files_collection << file
-              checked_files.add(file)
-            end
-          end
-        end
-
-        files_collection.each do |file|
-          full_path = File.join(@syntaxer.root_path,file)
-          unless rule.exec_existence
-            notify_observers(rule)
-          else
-            errors = check(rule, full_path)
-            FileStatus.build(file, errors)
-            changed
-            notify_observers
-          end
-        end
-=end
-
-      
       self
     end
 
