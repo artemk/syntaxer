@@ -1,9 +1,9 @@
 module Syntaxer
   class LanguageDefinitionException < Exception; end
     
-  LanguageDefinition = Struct.new(:name, :extensions, :specific_files, :folders, :ignore_folders, :exec_rule) do
+  LanguageDefinition = Struct.new(:name, :extensions, :specific_files, :folders, :ignore_folders, :exec_rule, :executor, :exec_existence) do
     def initialize(*args)
-      super(*args)      
+      super(*args)
       raise LanguageDefinitionException.new "name can't be blank" unless self.name     
     end
     

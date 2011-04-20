@@ -53,7 +53,37 @@ module Syntaxer
 
     def process
       checked_files = Set.new
+      rule_files = {}
+      
       @reader.rules.each do |rule|
+        rule_files[rule.name] = {}
+        rule_files[rule.name][:rule] = rule
+        rule_files[rule.name][:files] = []
+        rule.extensions.each do |ext|
+          files.each do |file|
+            if file.include?(ext)
+              rule_files[rule.name][:files].push(file)
+            end
+          end
+        end
+      end
+
+      rule_files.each do |rule_name, rule|
+        rule[:files].each do |file|
+          full_path = File.join(@syntaxer.root_path,file)
+          changed
+          unless rule[:rule].exec_existence
+            notify_observers(rule[:rule])
+          else
+            errors = check(rule[:rule], full_path)
+            FileStatus.build(file, errors)
+            notify_observers
+          end
+        end
+      end
+
+      
+=begin        
         files_collection = []
         rule.extensions.each do |ext|
           files.each do |file|
@@ -66,12 +96,17 @@ module Syntaxer
 
         files_collection.each do |file|
           full_path = File.join(@syntaxer.root_path,file)
-          errors = check(rule, full_path)
-          FileStatus.build(file, errors)
-          changed
-          notify_observers(errors.empty?)
+          unless rule.exec_existence
+            notify_observers(rule)
+          else
+            errors = check(rule, full_path)
+            FileStatus.build(file, errors)
+            changed
+            notify_observers
+          end
         end
-      end
+=end
+
       
       self
     end
@@ -94,11 +129,17 @@ module Syntaxer
 
     def process
       @reader.rules.each do |rule|
+        # check if executor exists
         rule.files_list(@syntaxer.root_path).each do |file|
-          errors = check(rule, file)
-          FileStatus.build(file, errors)
           changed
-          notify_observers(errors.empty?)
+          unless rule.exec_existence
+            # notify if not exists
+            notify_observers(rule)
+          else
+            errors = check(rule, file)
+            FileStatus.build(file, errors)
+            notify_observers
+          end
         end
       end
       

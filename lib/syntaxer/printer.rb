@@ -4,8 +4,10 @@ module Syntaxer
 
   class Printer
     class << self
+      NON_EXISTENT_RULE_MESSAGE = "exec_rule `%s` for language %s not exists. Skip"
+      
       @@bar = nil
-      @@all_files = []
+      @@not_exists_rules = []
       attr_accessor :quite, :loud
 
       # Set count of files for progress bar
@@ -20,8 +22,9 @@ module Syntaxer
       #
       # @param [Boolean] (true|false)
 
-      def update status
-        @@bar.increment! unless @quite
+      def update not_exists_rule = nil
+        @@bar.increment! if !@quite #&& not_exists_rule.nil?
+        @@not_exists_rules << not_exists_rule unless not_exists_rule.nil?
       end
 
       # Print error message for each if file
@@ -36,6 +39,13 @@ module Syntaxer
         @loud ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
           print_message(file)
+        end
+
+        unless @@not_exists_rules.empty?
+          puts "\n"
+          @@not_exists_rules.each do |rule|
+            puts (NON_EXISTENT_RULE_MESSAGE % [rule.executor, rule.name]).color(:yellow)
+          end
         end
       end
 
