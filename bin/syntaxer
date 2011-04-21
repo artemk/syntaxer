@@ -15,6 +15,7 @@ class SyntaxerCLI
     options.config_file = Syntaxer::SYNTAXER_RULES_FILE  
     options.root_path   = Dir.getwd
     options.languages   = :all
+    options.warnings    = false
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
@@ -50,6 +51,10 @@ class SyntaxerCLI
 
       opts.on("-i", "--install", "Write hooks to git") do |r|
         options.generate = true
+      end
+
+      opts.on("-W", "--warnings", "Turn warning messages on") do |r|
+        options.warnings = true
       end
 
       opts.separator ""

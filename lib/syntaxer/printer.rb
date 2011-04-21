@@ -24,7 +24,7 @@ module Syntaxer
 
       def update not_exists_rule = nil
         @@bar.increment! if !@quite #&& not_exists_rule.nil?
-        @@not_exists_rules << not_exists_rule unless not_exists_rule.nil?
+        @@not_exists_rules << not_exists_rule if !not_exists_rule.nil? && !@@not_exists_rules.include?(not_exists_rule)
       end
 
       # Print error message for each if file

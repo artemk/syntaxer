@@ -3,7 +3,7 @@ syntaxer do
     folders "**/*"
     extensions "rb", "rake"
     specific_files "Rakefile", "Thorfile"
-    exec_rule "ruby -wc %filename%"
+    exec_rule "ruby -c %filename%"
   end
   
   lang :sass do

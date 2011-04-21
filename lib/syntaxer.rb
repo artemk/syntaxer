@@ -17,7 +17,7 @@ module Syntaxer
   SYNTAXER_RULES_FILE = File.join(File.dirname(__FILE__), "..", "syntaxer_rules.dist.rb")
   
   class << self
-    attr_reader :reader, :repository, :root_path, :result, :verbose
+    attr_reader :reader, :repository, :root_path, :results, :warnings
     
     def configure
       yield(self) if block_given?
@@ -36,7 +36,8 @@ module Syntaxer
     def check_syntax(options = {})
       @root_path = options[:root_path]
       Printer.quite = options[:quite] || false
-      Printer.loud = options[:loud] || false 
+      Printer.loud = options[:loud] || false
+      @warnings = options[:warnings]
       
       @reader = Reader::DSLReader.load(options[:config_file])
       @repository = Repository.factory(@root_path, options[:repository]) if options[:repository]

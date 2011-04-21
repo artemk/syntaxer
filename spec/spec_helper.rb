@@ -1,9 +1,11 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'rubygems'
 require 'rspec'
 require 'git'
 require 'syntaxer'
 require "tmpdir"
+require 'aruba/api'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -81,5 +83,14 @@ end
 
 def syntaxer_rules_example_file file = ''
   File.join(fixtures_path, "#{file.empty? ? 'syntaxer_rules': file}.rb" )
+end
+
+class ArubaHelper
+  include Aruba::Api
+  class << self
+    def method_missing method, *args
+      ArubaHelper.new.send(method, *args)
+    end
+  end
 end
 
