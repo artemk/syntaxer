@@ -3,9 +3,9 @@ Given /^git repository$/ do
 end
 
 Given /^some file with wrong syntax$/ do
-  in_current_dir do
+  #in_current_dir do
     add_fixtures_files
-  end
+  #end
 end
 
 When /^run `git commit \-m \"some message\"` interactively$/ do 
@@ -24,3 +24,5 @@ Given /^I make first commit$/ do
   run_simple(unescape("git add ."), false)
   run_simple(unescape("git commit -m 'first commit'"), false)
 end
+
+

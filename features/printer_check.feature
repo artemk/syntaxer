@@ -18,7 +18,7 @@ Feature: Check output of script
     Then I run `syntaxer -l`
     And the output should contain:
       """
-/home/ignar/Development/syntaxer/tmp/aruba/correct.rb OK
+correct.rb OK
       """
 
   @plain @output

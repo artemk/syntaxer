@@ -1,9 +1,11 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'rubygems'
 require 'rspec'
 require 'git'
 require 'syntaxer'
 require "tmpdir"
+require 'aruba/api'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -67,7 +69,7 @@ def add_hook(ruby_repo_dir)
   hook_file = File.join(ruby_repo_dir,'.git/hooks/pre-commit')
   
   File.open(hook_file, 'w') do |f|
-    f.puts "#{bin_file} -c #{syntaxer_rules_example_file('syntaxer_rules_git')} -r git -p #{ruby_repo_dir}"
+    f.puts "#{bin_file} -c #{syntaxer_rules_example_file} -r git -p #{ruby_repo_dir} --hook"
   end
   
   File.chmod(0755, hook_file)
@@ -81,5 +83,14 @@ end
 
 def syntaxer_rules_example_file file = ''
   File.join(fixtures_path, "#{file.empty? ? 'syntaxer_rules': file}.rb" )
+end
+
+class ArubaHelper
+  include Aruba::Api
+  class << self
+    def method_missing method, *args
+      ArubaHelper.new.send(method, *args)
+    end
+  end
 end
 
