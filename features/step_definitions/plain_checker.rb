@@ -2,6 +2,22 @@ Given /^directory contains two files$/ do
   create_temp_plain_work_dir
 end
 
+When /^I run 'syntaxer'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')}"), false)
+end
+
+Then /^I run 'syntaxer \-l'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -l"), false)
+end
+
+Then /^I run 'syntaxer \-W'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -W"), false)
+end
+
+Then /^I run 'syntaxer \-v'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -v"), false)
+end
+
 When /^I cd to working directory$/ do
   cd(@tmp_dir)
 end

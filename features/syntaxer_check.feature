@@ -7,7 +7,7 @@ Feature: Test options
 
   @plain
   Scenario: Run version checking
-    When I run `syntaxer -v`
+    When I run 'syntaxer -v'
     Then the exit status should be 0
     And the output should be the same as in "VERSION" file
 
@@ -18,7 +18,7 @@ Feature: Test options
      Method /^I love ruby$/ do
      end
      """
-    When I run `syntaxer -W`
+    When I run 'syntaxer -W'
     Then the output should contain "warning: ambiguous first argument;"
 
   @plain
@@ -27,5 +27,5 @@ Feature: Test options
       """
       <%php echo 1; %>
       """
-    When I run `syntaxer -W`
+    When I run 'syntaxer -W'
     Then the output should contain "Syntax OK"

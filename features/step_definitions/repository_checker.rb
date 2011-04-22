@@ -12,6 +12,11 @@ When /^run `git commit \-m \"some message\"` interactively$/ do
   add_hook
 end
 
+Then /^I run 'syntaxer \-i \-r git'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -i -r git"), false)
+end
+
+
 Then /^the syntaxer should stop commit$/ do
   lambda{make_git_commit}.should raise_exception
 end

@@ -15,7 +15,7 @@ Feature: Check output of script
       """
       class B; end;
       """
-    Then I run `syntaxer -l`
+    Then I run 'syntaxer -l'
     And the output should contain:
       """
 correct.rb OK
@@ -33,7 +33,7 @@ correct.rb OK
       """
       class A; end
       """
-    Then I run `syntaxer`
+    Then I run 'syntaxer'
     And the output should contain:
       """
       exec_rule `haml` for language haml not exists. Skip
@@ -47,7 +47,7 @@ correct.rb OK
       """
     And I init empty repository
     And I make first commit
-    And I run `syntaxer -i -r git`
+    And I run 'syntaxer -i -r git'
     Given a file named "correct.haml" with:
       """
       %p
