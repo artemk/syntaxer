@@ -1,3 +1,8 @@
+Given /^I'am using a clean gemset test$/ do
+  Aruba::Api::DEFAULT_TIMEOUT_SECONDS = 20
+  use_clean_gemset("test") 
+end
+
 Given /^directory contains two files$/ do
   create_temp_plain_work_dir
 end
