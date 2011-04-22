@@ -16,6 +16,7 @@ class SyntaxerCLI
     options.root_path   = Dir.getwd
     options.languages   = :all
     options.warnings    = false
+    options.rails       = false
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
@@ -55,6 +56,14 @@ class SyntaxerCLI
 
       opts.on("-W", "--warnings", "Turn warning messages on") do |r|
         options.warnings = true
+      end
+
+      opts.on("-H", "--hook", "Use syntaxer in hook context") do |r|
+        options.hook = true
+      end
+
+      opts.on("-R", "--rails", "Use syntaxer with rails") do |r|
+        options.rails = true
       end
 
       opts.separator ""

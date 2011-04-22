@@ -11,7 +11,11 @@ module Syntaxer
     attr_accessor :syntaxer, :reader
     
     def initialize(syntaxer, count)
-      Printer.count_of_files count
+      Printer.setup do |p|
+        p.count_of_files = count
+        p.mode = syntaxer.hook ? :hook : :default
+      end
+
       add_observer(Printer)
       @syntaxer = syntaxer
       @reader = @syntaxer.reader
@@ -36,14 +40,14 @@ module Syntaxer
       changed
       unless rule.exec_existence
         # notify if not exists
-        notify_observers(rule)
+        notify_observers({:rule => rule})
       else
         if @syntaxer.warnings && rule.name == :ruby
           rule.exec_rule = rule.exec_rule.gsub(/(-\S+)\s/,'\1w ')
         end
         errors = run_exec_rule(rule, file)
         FileStatus.build(file, errors)
-        notify_observers
+        notify_observers({:file_status => errors.empty?})
       end
     end
 
@@ -77,7 +81,8 @@ module Syntaxer
         rule_files[rule.name][:files] = []
         rule.extensions.each do |ext|
           files.each do |file|
-            if file.include?(ext)
+            if File.extname(file).gsub(/\./,'') == ext || \
+              (!rule.specific_files.nil? && !rule_files[rule.name][:files].include?(file) && rule.specific_files.include?(file))
               rule_files[rule.name][:files].push(file)
             end
           end

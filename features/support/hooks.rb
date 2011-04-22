@@ -2,6 +2,6 @@ Before do
   
 end
 
-After do
-  
+AfterStep do
+  FileUtils.rm_r('tmp/arba/.git') if File.directory?('tmp/arba/.git')
 end

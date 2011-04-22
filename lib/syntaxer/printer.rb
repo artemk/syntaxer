@@ -8,23 +8,31 @@ module Syntaxer
       
       @@bar = nil
       @@not_exists_rules = []
-      attr_accessor :quite, :loud
+      attr_accessor :quite, :loud, :mode, :count_of_files
 
-      # Set count of files for progress bar
-      #
-      # @param [Integer] count of files
-
-      def count_of_files count
-        @@bar = ProgressBar.new(count, :bar, :counter)
+      def setup &block
+        yield self if block_given?
+        if @mode == :hook
+          @@bar = Syntaxer::ProgressBar.new
+        else
+          @@bar = ::ProgressBar.new(@count_of_files, :bar, :counter)
+        end
       end
 
       # Show progress
       #
       # @param [Boolean] (true|false)
 
-      def update not_exists_rule = nil
-        @@bar.increment! if !@quite #&& not_exists_rule.nil?
-        @@not_exists_rules << not_exists_rule if !not_exists_rule.nil? && !@@not_exists_rules.include?(not_exists_rule)
+      def update *args #not_exists_rule = nil, file_status = (status=true;)
+        args = args.first
+        @@not_exists_rules << args[:rule] if args.include?(:rule) && !@@not_exists_rules.include?(args[:rule])
+        return if @quite
+        if args.include?(:file_status)
+          @mode == :hook ? @@bar.increment!(args[:file_status]) : @@bar.increment!
+          # @@bar.increment!(args[:file_status]) if @mode == :hook
+          # @@bar.increment! unless @mode == :hook
+        end
+        true
       end
 
       # Print error message for each if file

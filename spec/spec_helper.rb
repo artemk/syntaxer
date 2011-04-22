@@ -69,7 +69,7 @@ def add_hook(ruby_repo_dir)
   hook_file = File.join(ruby_repo_dir,'.git/hooks/pre-commit')
   
   File.open(hook_file, 'w') do |f|
-    f.puts "#{bin_file} -c #{syntaxer_rules_example_file('syntaxer_rules_git')} -r git -p #{ruby_repo_dir}"
+    f.puts "#{bin_file} -c #{syntaxer_rules_example_file} -r git -p #{ruby_repo_dir} --hook"
   end
   
   File.chmod(0755, hook_file)

@@ -20,6 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.email = "kramarenko.artyom@gmail.com"
   gem.authors = ["artemk"]
   gem.executables = ["syntaxer"]
+  gem.files.include "lib/syntaxer/progress_bar.rb"
 end
 Jeweler::RubygemsDotOrgTasks.new
 
