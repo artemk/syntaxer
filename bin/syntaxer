@@ -15,6 +15,8 @@ class SyntaxerCLI
     options.config_file = Syntaxer::SYNTAXER_RULES_FILE  
     options.root_path   = Dir.getwd
     options.languages   = :all
+    options.warnings    = false
+    options.rails       = false
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
@@ -40,12 +42,28 @@ class SyntaxerCLI
         options.repository = r
       end
       
-      opts.on("-q", "--quite", "Run in verbose mode") do |r|
+      opts.on("-q", "--quite", "Run in quite mode") do |r|
         options.quite = true
+      end
+
+      opts.on("-l", "--loud", "Run in loud mode") do |r|
+        options.loud = true
       end
 
       opts.on("-i", "--install", "Write hooks to git") do |r|
         options.generate = true
+      end
+
+      opts.on("-W", "--warnings", "Turn warning messages on") do |r|
+        options.warnings = true
+      end
+
+      opts.on("-H", "--hook", "Use syntaxer in hook context") do |r|
+        options.hook = true
+      end
+
+      opts.on("-R", "--rails", "Use syntaxer with rails") do |r|
+        options.rails = true
       end
 
       opts.separator ""

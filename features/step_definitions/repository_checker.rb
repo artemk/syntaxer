@@ -3,15 +3,31 @@ Given /^git repository$/ do
 end
 
 Given /^some file with wrong syntax$/ do
-  in_current_dir do
+  #in_current_dir do
     add_fixtures_files
-  end
+  #end
 end
 
 When /^run `git commit \-m \"some message\"` interactively$/ do 
   add_hook
 end
 
+Then /^I run 'syntaxer \-i \-r git'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -i -r git"), false)
+end
+
+
 Then /^the syntaxer should stop commit$/ do
   lambda{make_git_commit}.should raise_exception
 end
+
+Given /^I init empty repository$/ do
+  run_simple(unescape("git init"), false)
+end
+
+Given /^I make first commit$/ do
+  run_simple(unescape("git add ."), false)
+  run_simple(unescape("git commit -m 'first commit'"), false)
+end
+
+

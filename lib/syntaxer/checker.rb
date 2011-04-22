@@ -6,12 +6,16 @@ module Syntaxer
     include Observable
     extend Forwardable
 
-    def_delegators Syntaxer::FileStatus, :error_files, :fine_files      
-         
+    def_delegators Syntaxer::FileStatus, :error_files, :all_files
+    
     attr_accessor :syntaxer, :reader
     
     def initialize(syntaxer, count)
-      Printer.count_of_files count
+      Printer.setup do |p|
+        p.count_of_files = count
+        p.mode = syntaxer.hook ? :hook : :default
+      end
+
       add_observer(Printer)
       @syntaxer = syntaxer
       @reader = @syntaxer.reader
@@ -31,7 +35,23 @@ module Syntaxer
     end
 
     protected
+
     def check rule, file
+      changed
+      unless rule.exec_existence
+        # notify if not exists
+        notify_observers({:rule => rule})
+      else
+        if @syntaxer.warnings && rule.name == :ruby
+          rule.exec_rule = rule.exec_rule.gsub(/(-\S+)\s/,'\1w ')
+        end
+        errors = run_exec_rule(rule, file)
+        FileStatus.build(file, errors)
+        notify_observers({:file_status => errors.empty?})
+      end
+    end
+
+    def run_exec_rule rule, file
       popen3(rule.exec_rule.gsub('%filename%', file)) do |stdin, stdout, stderr, wait_thr|
         stderr.read.split("\n")
       end
@@ -53,26 +73,29 @@ module Syntaxer
 
     def process
       checked_files = Set.new
+      rule_files = {}
+      
       @reader.rules.each do |rule|
-        files_collection = []
+        rule_files[rule.name] = {}
+        rule_files[rule.name][:rule] = rule
+        rule_files[rule.name][:files] = []
         rule.extensions.each do |ext|
           files.each do |file|
-            if file.include?(ext) && !checked_files.include?(file)
-              files_collection << file
-              checked_files.add(file)
+            if File.extname(file).gsub(/\./,'') == ext || \
+              (!rule.specific_files.nil? && !rule_files[rule.name][:files].include?(file) && rule.specific_files.include?(file))
+              rule_files[rule.name][:files].push(file)
             end
           end
         end
+      end
 
-        files_collection.each do |file|
+      rule_files.each do |rule_name, rule|
+        rule[:files].each do |file|
           full_path = File.join(@syntaxer.root_path,file)
-          errors = check(rule, full_path)
-          FileStatus.build(file, errors)
-          changed
-          notify_observers(errors.empty?)
+          check(rule[:rule], full_path)
         end
       end
-      
+
       self
     end
 
@@ -94,11 +117,9 @@ module Syntaxer
 
     def process
       @reader.rules.each do |rule|
+        # check if executor exists
         rule.files_list(@syntaxer.root_path).each do |file|
-          errors = check(rule, file)
-          FileStatus.build(file, errors)
-          changed
-          notify_observers(errors.empty?)
+          check(rule, file)
         end
       end
       

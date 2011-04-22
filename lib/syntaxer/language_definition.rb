@@ -1,19 +1,21 @@
 module Syntaxer
   class LanguageDefinitionException < Exception; end
     
-  LanguageDefinition = Struct.new(:name, :extensions, :specific_files, :folders, :ignore_folders, :exec_rule) do
+  LanguageDefinition = Struct.new(:name, :extensions, :specific_files, :folders, :ignore_folders, :exec_rule, :executor, :exec_existence) do
     def initialize(*args)
-      super(*args)      
+      super(*args)
       raise LanguageDefinitionException.new "name can't be blank" unless self.name     
     end
     
     
     def files_list(root_path)
+      root_path += "/" if root_path.match(/\/$/).nil?
       main_rule = folders.map{|f| root_path + f + ".\{#{extensions.join(',')}\}"}
       list = Rake::FileList.new(main_rule) do |fl|              
-        #fl.add(specific_files) if specific_files  TODO:fix this
         fl.exclude(ignore_folders) if ignore_folders
       end
+      all_files = Rake::FileList.new(root_path+'*')
+      list += all_files.find_all {|f| f if !File.directory?(f) && !specific_files.nil? && specific_files.include?(File.basename(f)) }
       list
     end
   end

@@ -6,28 +6,29 @@ describe "Syntaxer::Checker" do
     
     before(:each) do
       reader = mock('Reader')
-      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -wc %filename%")])
-      reader.stub!(:files_count).and_return(2)
+      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -c %filename%", "ruby", true)])
+      reader.stub!(:files_count).and_return(3)
       Syntaxer.should_receive(:reader).any_number_of_times.and_return(reader)
       Syntaxer.stub!(:root_path).and_return(fixtures_path(:ruby))
 
       Syntaxer::Printer.stub!(:print_result)
-      Syntaxer::Printer.stub!(:print_progress)
+      Syntaxer::Printer.stub!(:print_message)
+      Syntaxer::Printer.stub!(:update)
     end
     
     subject {Syntaxer::PlainChecker.new(Syntaxer)}
     
     it {should respond_to(:error_files)}
-    it {should respond_to(:fine_files)}
+    it {should respond_to(:all_files)}
 
     it "should return correct error_files " do
       subject.process
-      subject.fine_files.size.should == 1      
-      subject.error_files.size.should == 1
+      subject.all_files.size.should == 3
+      subject.error_files.size.should == 2
     end
     
     it "should send to FileStatus" do
-      Syntaxer::FileStatus.should_receive(:build).twice
+      Syntaxer::FileStatus.should_receive(:build).exactly(3).times
       subject.process      
     end
   end
@@ -40,7 +41,8 @@ describe "Syntaxer::Checker" do
 
     before(:all) do
       Syntaxer::Printer.stub!(:print_result)
-      Syntaxer::Printer.stub!(:print_progress)
+      Syntaxer::Printer.stub!(:print_message)
+      Syntaxer::Printer.stub!(:update)
     end
     
     before(:each) do
@@ -51,7 +53,7 @@ describe "Syntaxer::Checker" do
       make_git_add(@repo_dir)
 
       reader = mock('Reader')
-      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -wc %filename%")])
+      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -c %filename%", "ruby", true)])
       Syntaxer.should_receive(:reader).and_return(reader)
       Syntaxer.stub!(:root_path).and_return(@repo_dir)
       repo = Syntaxer::Repository.factory(@repo_dir, :git)
@@ -62,7 +64,7 @@ describe "Syntaxer::Checker" do
 
     it "should return correct error_files" do
       subject.process
-      subject.fine_files.size.should_not eql(0)
+      subject.all_files.size.should_not eql(0)
       subject.error_files.size.should_not eql(0)
     end
 

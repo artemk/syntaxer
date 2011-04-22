@@ -7,7 +7,25 @@ Feature: Test options
 
   @plain
   Scenario: Run version checking
-    When I run `syntaxer -v`
+    When I run 'syntaxer -v'
     Then the exit status should be 0
     And the output should be the same as in "VERSION" file
 
+  @plain
+  Scenario: Run syntaxer with warning option and ruby files
+    Given a file named "correct.rb" with:
+     """
+     Method /^I love ruby$/ do
+     end
+     """
+    When I run 'syntaxer -W'
+    Then the output should contain "warning: ambiguous first argument;"
+
+  @plain
+  Scenario: Run syntaxer with warning option and non ruby files
+    Given a file named "correct.php" with:
+      """
+      <%php echo 1; %>
+      """
+    When I run 'syntaxer -W'
+    Then the output should contain "Syntax OK"

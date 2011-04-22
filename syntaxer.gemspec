@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["artemk"]
-  s.date = %q{2011-04-18}
+  s.date = %q{2011-04-22}
   s.default_executable = %q{syntaxer}
   s.description = %q{Syntax checker for ruby and other languages}
   s.email = %q{kramarenko.artyom@gmail.com}
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/syntaxer",
     "features/plain_check.feature",
+    "features/printer_check.feature",
     "features/repository_check.feature",
     "features/step_definitions/plain_checker.rb",
     "features/step_definitions/repository_checker.rb",
@@ -40,6 +41,7 @@ Gem::Specification.new do |s|
     "lib/syntaxer/file_status.rb",
     "lib/syntaxer/language_definition.rb",
     "lib/syntaxer/printer.rb",
+    "lib/syntaxer/progress_bar.rb",
     "lib/syntaxer/railtie.rb",
     "lib/syntaxer/reader.rb",
     "lib/syntaxer/repository.rb",
@@ -49,6 +51,7 @@ Gem::Specification.new do |s|
     "spec/fixtures/haml/correct.html.haml",
     "spec/fixtures/haml/wrong.html.haml",
     "spec/fixtures/ruby/correct.rb.example",
+    "spec/fixtures/ruby/subfolder/wrong.rb.example",
     "spec/fixtures/ruby/wrong.rb.example",
     "spec/fixtures/syntaxer_rules.rb",
     "spec/fixtures/syntaxer_rules_git.rb",
@@ -64,7 +67,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/artemk/syntaxer}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Syntax checker for ruby and other languages}
   s.test_files = [
     "spec/checker_spec.rb",

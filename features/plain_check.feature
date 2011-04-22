@@ -8,7 +8,7 @@ Feature: Check syntax in plain mode
   @plain
   Scenario: Run checker in directory
     Given directory contains two files
-    When I run `syntaxer` interactively
+    When I run 'syntaxer'
     Then the exit status should not be 0
     And the output should not contain "Syntax OK"
 

@@ -3,3 +3,7 @@ class A
     puts "Do nothing"
   end
 end
+
+Method /^I love ruby$/ do
+
+end
