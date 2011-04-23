@@ -3,7 +3,7 @@
 == Overview
 
 Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository for checking changed and added files only.
-It is useful for for rails team, because you need to store only 
+It is useful for for rails team, because you need to store only file with rules, and git hook will be generated for you.
 
 == Installation
 
@@ -11,30 +11,24 @@ To install syntaxer run
 
   [sudo] gem install syntaxer
   
- Works with 1.8.x and 1.9.x
-
-== Fast Usage for Rails team
-
+  
 == Usage with rails
 
-Add to Gemfile
+1) Add to Gemfile
 
   gem "syntaxer"
 
-and run
+2)
 
   bundle install
 
-After this run:  
+3) 
 
   rake syntaxer:install
 
-It create config/syntaxer.rb file with common rails options, you may edit it as you wish.
+It creates config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
 
-And create .git/hooks/pre-commit script, it will be check syntax of
-created and updated files before every commit.
-
-== Usage
+== Standalone usage
 
 Example of usage:
 
@@ -54,8 +48,6 @@ Indicate custom config file
 
   syntaxer -c config.rb
 
-
-Describe your rules in syntaxer.rb file and put in "initializers" folder for rails
 
 Example of syntaxer.rb file:
 
