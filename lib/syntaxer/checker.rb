@@ -1,8 +1,9 @@
 require 'set'
 require "observer"
+require 'thread'
 module Syntaxer
   class Checker
-    include Open3
+    # include Open3
     include Observable
     extend Forwardable
 
@@ -43,20 +44,14 @@ module Syntaxer
         notify_observers({:rule => rule})
       else
         if @syntaxer.warnings && rule.name == :ruby
-          rule.exec_rule = rule.exec_rule.gsub(/(-\S+)\s/,'\1w ')
+          rule.exec_rule.exec_rule = rule.exec_rule.exec_rule.gsub(/(-\S+)\s/,'\1w ')
         end
-        errors = run_exec_rule(rule, file)
+        errors = rule.exec_rule.run(file)
         FileStatus.build(file, errors)
         notify_observers({:file_status => errors.empty?})
       end
     end
 
-    def run_exec_rule rule, file
-      popen3(rule.exec_rule.gsub('%filename%', file)) do |stdin, stdout, stderr, wait_thr|
-        stderr.read.split("\n")
-      end
-    end
-         
   end
 
   # Check status of files in repository
@@ -72,9 +67,8 @@ module Syntaxer
     # @see Checker#process
 
     def process
-      checked_files = Set.new
       rule_files = {}
-      
+      @deferred_process = []
       @reader.rules.each do |rule|
         rule_files[rule.name] = {}
         rule_files[rule.name][:rule] = rule
@@ -90,10 +84,18 @@ module Syntaxer
       end
 
       rule_files.each do |rule_name, rule|
-        rule[:files].each do |file|
-          full_path = File.join(@syntaxer.root_path,file)
-          check(rule[:rule], full_path)
+        if rule[:rule].deferred
+          @deferred_process << rule[:rule]
+        else
+          rule[:files].each do |file|
+            full_path = File.join(@syntaxer.root_path,file)
+            check(rule[:rule], full_path)
+          end
         end
+      end
+
+      @deferred_process.each do |rule|
+        rule.exec_rule.run
       end
 
       self
@@ -116,11 +118,20 @@ module Syntaxer
     # @see Checker#process
 
     def process
+      @deferred_process = []
       @reader.rules.each do |rule|
-        # check if executor exists
-        rule.files_list(@syntaxer.root_path).each do |file|
-          check(rule, file)
+        if rule.deferred
+          @deferred_process << rule
+        else
+          # check if executor exists
+          rule.files_list(@syntaxer.root_path).each do |file|
+            check(rule, file)
+          end
         end
+      end
+      
+      @deferred_process.each do |rule|
+        rule.exec_rule.run
       end
       
       self

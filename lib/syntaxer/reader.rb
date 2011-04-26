@@ -124,10 +124,18 @@ module Syntaxer
         current_rule.specific_files = args
       end
             
-      def exec_rule(exec_string)
-        current_rule.executor = exec_string.scan(/\w+/).first
-        current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
-        current_rule.exec_rule = exec_string    
+      def exec_rule(exec_string) 
+        if !exec_string.respond_to?(:call) || exec_string.is_a?(String)
+          current_rule.executor = exec_string.scan(/\w+/).first
+          current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
+          exec_rule = Syntaxer::Runner.default(current_rule, exec_string)
+          current_rule.deferred = false
+        else
+          current_rule.exec_existence = true
+          current_rule.deferred = true
+          exec_rule = exec_string.call(current_rule)
+        end
+        current_rule.exec_rule = exec_rule
       end
       
       def ignore_folders(ignore_folders)

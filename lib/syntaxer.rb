@@ -8,6 +8,7 @@ require 'progress_bar'
 require File.join(%w{syntaxer reader})
 require File.join(%w{syntaxer file_status})
 require File.join(%w{syntaxer checker})
+require File.join(%w{syntaxer runner})
 require File.join(%w{syntaxer repository})
 require File.join(%w{syntaxer language_definition})
 require File.join(%w{syntaxer printer})
