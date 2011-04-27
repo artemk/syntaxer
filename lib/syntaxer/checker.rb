@@ -59,7 +59,27 @@ module Syntaxer
   class RepoChecker < Checker
 
     def initialize syntaxer
-      super syntaxer, syntaxer.repository.changed_and_added_files.length
+      @syntaxer = syntaxer
+      count_of_files = 0
+      @rule_files = {}
+      @deferred_process = []
+      syntaxer.reader.rules.each do |rule|
+        @rule_files[rule.name] = {}
+        @rule_files[rule.name][:rule] = rule
+        @rule_files[rule.name][:files] = []
+        rule.extensions.each do |ext|
+          files.each do |file|
+            if File.extname(file).gsub(/\./,'') == ext || \
+              (!rule.specific_files.nil? && !@rule_files[rule.name][:files].include?(file) && rule.specific_files.include?(file))
+              
+              @rule_files[rule.name][:files].push(file)
+              count_of_files += 1 if !rule.deferred # skip these files
+            end
+          end
+        end
+      end
+      
+      super syntaxer, count_of_files 
     end
 
     # Check syntax in repository directory
@@ -67,25 +87,9 @@ module Syntaxer
     # @see Checker#process
 
     def process
-      rule_files = {}
-      @deferred_process = []
-      @reader.rules.each do |rule|
-        rule_files[rule.name] = {}
-        rule_files[rule.name][:rule] = rule
-        rule_files[rule.name][:files] = []
-        rule.extensions.each do |ext|
-          files.each do |file|
-            if File.extname(file).gsub(/\./,'') == ext || \
-              (!rule.specific_files.nil? && !rule_files[rule.name][:files].include?(file) && rule.specific_files.include?(file))
-              rule_files[rule.name][:files].push(file)
-            end
-          end
-        end
-      end
-
-      rule_files.each do |rule_name, rule|
+      @rule_files.each do |rule_name, rule|
         if rule[:rule].deferred
-          @deferred_process << rule[:rule]
+          @deferred_process << rule
         else
           rule[:files].each do |file|
             full_path = File.join(@syntaxer.root_path,file)
@@ -95,7 +99,7 @@ module Syntaxer
       end
 
       @deferred_process.each do |rule|
-        rule.exec_rule.run
+        rule[:rule].exec_rule.run(@syntaxer.root_path, rule[:files])
       end
 
       self
@@ -131,7 +135,7 @@ module Syntaxer
       end
       
       @deferred_process.each do |rule|
-        rule.exec_rule.run
+        rule.exec_rule.run(@syntaxer.root_path, rule.files_list(@syntaxer.root_path))
       end
       
       self

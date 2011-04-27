@@ -39,12 +39,15 @@ module Syntaxer
     end
 
     module Javascript
-      def run
+      def run(root, files = [])
+        puts ''
         JSLint::Lint.new(
-                         :paths => @rule.folders,
+                         :paths => files,
                          :config_path => 'config/jslint.yml'
                          ).run
         []
+      rescue JSLint::LintCheckFailure
+        $stdmyout.puts "jslint checking failed".color(:red)
       end
     end
 

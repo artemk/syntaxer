@@ -3,14 +3,15 @@ namespace :syntaxer do
   task :install => :environment do
     if ARGV.any?{|a| a =~ /--jslint/} 
       Rake::Task['jslint:copy_config'].execute
-      Syntaxer::Utils.write_rails_conf_with_jslint
+      config_file = "syntaxer_rails_rules.dist.rb"
     else
-      Syntaxer::Utils.write_rails_conf_without_jslint
+      config_file = "syntaxer_rules.dist.rb"
     end
 
+    FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',config_file), File.join(Rails.root,'config','syntaxer.rb'))
+    
+
     system('syntaxer -i -r git --rails')
-    FileUtils.cp(File.join(File.dirname(__FILE__),'..','..','syntaxer_rails_rules.dist.rb'),\
-                 File.join(Rails.root,'config','syntaxer.rb'))
     
     puts "Syntaxer hook installed. Look to the config/syntaxer.rb to change configuration.".color(:green)
   end

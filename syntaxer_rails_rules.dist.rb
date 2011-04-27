@@ -17,4 +17,10 @@ syntaxer do
     extensions "haml"
     exec_rule "haml -c %filename%"
   end
+
+  lang :javascript do
+    folders "public/javascripts/*", "public/javascripts/**/*"
+    extensions "js"
+    exec_rule Syntaxer::Runner.javascript
+  end
 end
