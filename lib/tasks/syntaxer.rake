@@ -3,9 +3,9 @@ namespace :syntaxer do
   task :install => :environment do
     if ARGV.any?{|a| a =~ /--jslint/} 
       Rake::Task['jslint:copy_config'].execute
-      config_file = "syntaxer_rails_rules.dist.rb"
+      config_file = "syntaxer_rails_rules_jslint.dist.rb"
     else
-      config_file = "syntaxer_rules.dist.rb"
+      config_file = "syntaxer_rails_rules.dist.rb"
     end
 
     FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',config_file), File.join(Rails.root,'config','syntaxer.rb'))

@@ -12,7 +12,7 @@ module Syntaxer
 
     class << self
       def javascript
-        lambda do |rule|
+        lambda do
           c = Syntaxer::Runner.new(rule)
           c.extend(Runners::Javascript)
           c
@@ -31,7 +31,7 @@ module Syntaxer
     
     module Default
       def run file
-        result = popen3(@exec_rule.gsub('%filename%', file)) do |stdin, stdout, stderr, wait_thr|
+        result = Open3.popen3(@exec_rule.gsub('%filename%', file)) do |stdin, stdout, stderr, wait_thr|
           stderr.read.split("\n")
         end
         result

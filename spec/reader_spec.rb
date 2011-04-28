@@ -116,5 +116,13 @@ describe "Syntaxer::Reader::DSLReader" do
       @reader.overall_ignore_folders().should == []
     end   
   end
+
+  context "#exec_rule" do
+    subject{Syntaxer::Reader::DSLReader.new}
+    it "should return Syntaxer::Runner instance" do
+      reader = Syntaxer::Reader::DSLReader.load(syntaxer_rules_example_file('syntaxer_rules_jslint'))
+      reader.rules.first.exec_rule.should be_instance_of(Syntaxer::Runner)
+    end
+  end
     
 end

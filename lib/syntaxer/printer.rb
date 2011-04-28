@@ -54,7 +54,7 @@ module Syntaxer
           end
         end
         
-        $stderr.puts($stdmyout.string.color(:red))
+        $stderr.puts("\nErrors:"+"\n\t"+$stdmyout.string.color(:red))
       end
 
       def print_message filestatus
