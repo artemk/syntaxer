@@ -10,7 +10,6 @@ namespace :syntaxer do
 
     FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',config_file), File.join(Rails.root,'config','syntaxer.rb'))
     
-
     system('syntaxer -i -r git --rails')
     
     puts "Syntaxer hook installed. Look to the config/syntaxer.rb to change configuration.".color(:green)

@@ -47,7 +47,7 @@ module Syntaxer
       
       @reader = Reader::DSLReader.load(options[:config_file])
 
-      if @jslint
+      if @jslint # if jslint option passed set from command line we have to add new rule with indicated dir
         rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@jslint+"*", @jslint+"**/*"], nil, nil, nil, true, true)
         rule.exec_rule = Runner.javascript.call(rule)
         @reader.add_rule rule
@@ -58,9 +58,8 @@ module Syntaxer
       $stdmyout = StringIO.new
       checker = Checker.process(self)
       Printer.print_result checker
-      $stderr.puts $stdmyout.string
 
-      exit(1) if !checker.error_files.empty? || $stdmyout.string =~ /jslint checking failed/
+      exit(1) unless checker.error_files.empty? && $stdmyout.string.empty?
     end
 
     # This method generate and put hook to .git/hooks

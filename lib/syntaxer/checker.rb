@@ -127,7 +127,6 @@ module Syntaxer
         if rule.deferred
           @deferred_process << rule
         else
-          # check if executor exists
           rule.files_list(@syntaxer.root_path).each do |file|
             check(rule, file)
           end

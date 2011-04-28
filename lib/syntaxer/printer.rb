@@ -46,13 +46,15 @@ module Syntaxer
         files.each do |file|
           print_message(file)
         end
-
+        
         unless @@not_exists_rules.empty?
           puts "\n"
           @@not_exists_rules.each do |rule|
             puts (NON_EXISTENT_RULE_MESSAGE % [rule.executor, rule.name]).color(:yellow)
           end
         end
+        
+        $stderr.puts($stdmyout.string.color(:red))
       end
 
       def print_message filestatus

@@ -142,13 +142,13 @@ module Syntaxer
         if !exec_string.respond_to?(:call) || exec_string.is_a?(String)
           current_rule.executor = exec_string.scan(/\w+/).first
           current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
-          exec_rule = Syntaxer::Runner.default(current_rule, exec_string)
+          exec_rule = Syntaxer::Runner.default(exec_string)
           current_rule.deferred = false
         else
           # if it is proc call it and pass current rule
           current_rule.exec_existence = true
           current_rule.deferred = true # we have run it after all console checkers
-          exec_rule = exec_string.call(current_rule)
+          exec_rule = exec_string.call
         end
         current_rule.exec_rule = exec_rule
       end

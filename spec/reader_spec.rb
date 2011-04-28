@@ -4,10 +4,12 @@ describe "Syntaxer::Reader::DSLReader" do
   
   context "#build" do
     it "should build from default distr rules files" do
+      Syntaxer::Runner.stub(:default)
+
       @reader = Syntaxer::Reader::DSLReader.build
-      @reader.rules.find(:ruby).should == Syntaxer::LanguageDefinition.new(:ruby, ["rb", "rake"], ["Rakefile", "Thorfile", "Gemfile"], ["**/*"], nil, "ruby -c %filename%", "ruby", true)
-      @reader.rules.find(:haml).should == Syntaxer::LanguageDefinition.new(:haml, ["haml"], nil, ["**/*"], nil, "haml -c %filename%", "haml", system("which haml 2>&1 > /dev/null"))
-      @reader.rules.find(:sass).should == Syntaxer::LanguageDefinition.new(:sass, ["sass"], nil, ["**/*"], nil, "sass -c %filename%", "sass", system("which haml 2>&1 > /dev/null"))
+      @reader.rules.find(:ruby).should eql(Syntaxer::LanguageDefinition.new(:ruby, ["rb", "rake"], ["Rakefile", "Thorfile", "Gemfile"], ["**/*"], nil, Syntaxer::Runner.default("ruby -c %filename%"), "ruby", true, false))
+      @reader.rules.find(:haml).should eql(Syntaxer::LanguageDefinition.new(:haml, ["haml"], nil, ["**/*"], nil, Syntaxer::Runner.default("haml -c %filename%"), "haml", system("which haml 2>&1 > /dev/null"), false))
+      @reader.rules.find(:sass).should eql(Syntaxer::LanguageDefinition.new(:sass, ["sass"], nil, ["**/*"], nil, Syntaxer::Runner.default("sass -c %filename%"), "sass", system("which haml 2>&1 > /dev/null"), false))
       
     end
   end

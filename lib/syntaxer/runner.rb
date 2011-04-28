@@ -6,8 +6,8 @@ module Syntaxer
 
     attr_accessor :rule, :exec_rule, :condition_var
 
-    def initialize rule = nil, exec_rule = nil
-      @rule, @exec_rule = rule, exec_rule
+    def initialize exec_rule = nil
+      @exec_rule = exec_rule
     end
 
     class << self
@@ -19,8 +19,8 @@ module Syntaxer
         end
       end
 
-      def default rule, exec_rule
-        c = self.new(rule, exec_rule)
+      def default exec_rule
+        c = self.new(exec_rule)
         c.extend(Runners::Default)
         c
       end
@@ -47,7 +47,7 @@ module Syntaxer
                          ).run
         []
       rescue JSLint::LintCheckFailure
-        $stdmyout.puts "jslint checking failed".color(:red)
+        $stdmyout.puts "jslint checking failed"
       end
     end
 
