@@ -13,7 +13,7 @@ module Syntaxer
     class << self
       def javascript
         lambda do
-          c = Syntaxer::Runner.new(rule)
+          c = Syntaxer::Runner.new
           c.extend(Runners::Javascript)
           c
         end
