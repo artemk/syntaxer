@@ -90,6 +90,40 @@ Options for usage
   -W, --warnings        show warning messages
   -h, --help            show help and options describe above.
 
+== Syntaxer with jslint
+
+You may use syntaxer to check javascript files using jslint (http://github.com/psionides/jslint_on_rails)
+
+It require installed Java and Rhino, you may read about it in jslint gem page.
+
+=== For checking js scripts in standalone mode
+
+  syntaxer --jslint [DIR]
+
+It will be check all scripts under DIR recursively
+
+You also may indicate custom config file or another options
+
+  syntaxer -c [CONFIG_FILE] --jslint [DIR]
+
+If where is `javascript` section in config file it will check it and DIR indicated in command line.    
+
+=== To run syntaxer with jslint on your rails project you should run in console:
+  
+  rake syntaxer:install --jslint
+
+It creates config/syntaxer.rb file with common rails options and config/jslint.rb with jslint options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
+
+Javascript section have to be in the following form in config file:
+
+  syntaxer do
+    lang :javascript do
+      folders "javascripts/*", "javascripts/**/*"
+      extensions "js"
+      exec_rule Syntaxer::Runner.javascript
+    end
+  end
+
 == Contributing to syntaxer
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet

@@ -14,9 +14,18 @@ module Syntaxer
         @ignore_folders = []
       end
 
+      def add_rule rule
+        @rules << rule
+        self
+      end
+
       def files_count syntaxer
         @rules.map{ |rule|
-          rule.files_list(syntaxer.root_path).length
+          if rule.deferred
+            0 # skip such files
+          else
+            rule.files_list(syntaxer.root_path).length
+          end
         }.inject(:+)
       end
             
@@ -123,11 +132,25 @@ module Syntaxer
       def specific_files(*args)
         current_rule.specific_files = args
       end
-            
+
+      # Create exec rule for language. It may be console string and
+      # ruby method
+      #
+      # @param [String|Proc]
       def exec_rule(exec_string)
-        current_rule.executor = exec_string.scan(/\w+/).first
-        current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
-        current_rule.exec_rule = exec_string    
+        # if it is string create default console runner
+        if !exec_string.respond_to?(:call) || exec_string.is_a?(String)
+          current_rule.executor = exec_string.scan(/\w+/).first
+          current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
+          exec_rule = Syntaxer::Runner.default(exec_string)
+          current_rule.deferred = false
+        else
+          # if it is proc call it and pass current rule
+          current_rule.exec_existence = true
+          current_rule.deferred = true # we have run it after all console checkers
+          exec_rule = exec_string.call
+        end
+        current_rule.exec_rule = exec_rule
       end
       
       def ignore_folders(ignore_folders)
