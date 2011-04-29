@@ -26,6 +26,7 @@ GEM
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
+    jslint_on_rails (1.0.6)
     json (1.5.1)
     options (2.3.0)
       fattr
@@ -53,6 +54,7 @@ DEPENDENCIES
   cucumber
   git
   jeweler (~> 1.5.2)
+  jslint_on_rails
   progress_bar
   rainbow
   rspec (>= 2.5.0)

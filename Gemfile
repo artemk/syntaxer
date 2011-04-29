@@ -6,6 +6,7 @@ gem "git"
 #for colorizing output
 gem "rainbow"
 gem "progress_bar"
+gem "jslint_on_rails", ">= 1.0.6"
 
 group :development do
   gem "rspec", ">= 2.5.0"

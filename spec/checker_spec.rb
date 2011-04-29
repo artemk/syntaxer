@@ -6,7 +6,7 @@ describe "Syntaxer::Checker" do
     
     before(:each) do
       reader = mock('Reader')
-      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -c %filename%", "ruby", true)])
+      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["rb.example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, Syntaxer::Runner.default("ruby -c %filename%"), "ruby", true)])
       reader.stub!(:files_count).and_return(3)
       Syntaxer.should_receive(:reader).any_number_of_times.and_return(reader)
       Syntaxer.stub!(:root_path).and_return(fixtures_path(:ruby))
@@ -53,8 +53,8 @@ describe "Syntaxer::Checker" do
       make_git_add(@repo_dir)
 
       reader = mock('Reader')
-      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, "ruby -c %filename%", "ruby", true)])
-      Syntaxer.should_receive(:reader).and_return(reader)
+      reader.stub!(:rules).and_return([Syntaxer::LanguageDefinition.new(:ruby, ["example", "rake"], ["Rakefile", "Thorfile"], ["**/*"], nil, Syntaxer::Runner.default("ruby -c %filename%"), "ruby", true)])
+      Syntaxer.should_receive(:reader).at_least(1).times.and_return(reader)
       Syntaxer.stub!(:root_path).and_return(@repo_dir)
       repo = Syntaxer::Repository.factory(@repo_dir, :git)
       Syntaxer.stub!(:repository).and_return(repo)

@@ -8,6 +8,7 @@ require 'progress_bar'
 require File.join(%w{syntaxer reader})
 require File.join(%w{syntaxer file_status})
 require File.join(%w{syntaxer checker})
+require File.join(%w{syntaxer runner})
 require File.join(%w{syntaxer repository})
 require File.join(%w{syntaxer language_definition})
 require File.join(%w{syntaxer printer})
@@ -20,7 +21,7 @@ module Syntaxer
   SYNTAXER_RULES_FILE = File.join(File.dirname(__FILE__), "..", "syntaxer_rules.dist.rb")
   
   class << self
-    attr_reader :reader, :repository, :root_path, :results, :warnings, :hook
+    attr_reader :reader, :repository, :root_path, :results, :warnings, :hook, :jslint
     
     def configure
       yield(self) if block_given?
@@ -38,17 +39,27 @@ module Syntaxer
     
     def check_syntax(options = {})
       @root_path = options[:root_path]
-      Printer.quite = options[:quite] || false
-      Printer.loud = options[:loud] || false
       @warnings = options[:warnings]
       @hook = options[:hook]
+      @jslint = options[:jslint]
+      Printer.quite = options[:quite] || false
+      Printer.loud = options[:loud] || false
       
       @reader = Reader::DSLReader.load(options[:config_file])
+
+      if @jslint # if jslint option passed set from command line we have to add new rule with indicated dir
+        rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@jslint+"*", @jslint+"**/*"], nil, nil, nil, true, true)
+        rule.exec_rule = Runner.javascript.call(rule)
+        @reader.add_rule rule
+      end
+
       @repository = Repository.factory(@root_path, options[:repository]) if options[:repository]
-      
+
+      $stdmyout = StringIO.new
       checker = Checker.process(self)
       Printer.print_result checker
-      exit(1) unless checker.error_files.empty?
+
+      exit(1) unless checker.error_files.empty? && $stdmyout.string.empty?
     end
 
     # This method generate and put hook to .git/hooks
