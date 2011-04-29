@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{syntaxer}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["artemk"]
-  s.date = %q{2011-04-22}
+  s.date = %q{2011-04-23}
   s.default_executable = %q{syntaxer}
   s.description = %q{Syntax checker for ruby and other languages}
   s.email = %q{kramarenko.artyom@gmail.com}
@@ -28,8 +28,10 @@ Gem::Specification.new do |s|
     "bin/syntaxer",
     "features/plain_check.feature",
     "features/printer_check.feature",
+    "features/rails_check.feature",
     "features/repository_check.feature",
     "features/step_definitions/plain_checker.rb",
+    "features/step_definitions/rails_checker.rb",
     "features/step_definitions/repository_checker.rb",
     "features/support/env.rb",
     "features/support/hooks.rb",
@@ -62,12 +64,13 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/syntaxer_spec.rb",
     "syntaxer.gemspec",
+    "syntaxer_rails_rules.dist.rb",
     "syntaxer_rules.dist.rb"
   ]
   s.homepage = %q{http://github.com/artemk/syntaxer}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{Syntax checker for ruby and other languages}
   s.test_files = [
     "spec/checker_spec.rb",
