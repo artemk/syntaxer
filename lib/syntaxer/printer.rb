@@ -29,8 +29,6 @@ module Syntaxer
         return if @quite
         if args.include?(:file_status)
           @mode == :hook ? @@bar.increment!(args[:file_status]) : @@bar.increment!
-          # @@bar.increment!(args[:file_status]) if @mode == :hook
-          # @@bar.increment! unless @mode == :hook
         end
         true
       end
@@ -42,19 +40,21 @@ module Syntaxer
       def print_result checker
         return if @quite
         puts "\n"
-        puts "Syntax OK".color(:green) if checker.error_files.empty?
+        puts "Syntax OK".color(:green) if checker.error_files.empty? && $stdmyout.string.empty?
 
         @loud ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
           print_message(file)
         end
-
+        
         unless @@not_exists_rules.empty?
           puts "\n"
           @@not_exists_rules.each do |rule|
             puts (NON_EXISTENT_RULE_MESSAGE % [rule.executor, rule.name]).color(:yellow)
           end
         end
+        
+        $stderr.puts("\nErrors:"+"\n\t"+$stdmyout.string.color(:red))
       end
 
       def print_message filestatus

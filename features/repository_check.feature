@@ -11,7 +11,3 @@ Feature: Check git repository before commit
     And some file with wrong syntax
     When run `git commit -m "some message"` interactively
     Then the syntaxer should stop commit
-
-
-
-
