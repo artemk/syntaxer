@@ -49,7 +49,7 @@ module Syntaxer
 
       if @jslint # if jslint option passed set from command line we have to add new rule with indicated dir
         rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@jslint+"*", @jslint+"**/*"], nil, nil, nil, true, true)
-        rule.exec_rule = Runner.javascript.call(rule)
+        rule.exec_rule = Runner.javascript.call
         @reader.add_rule rule
       end
 
