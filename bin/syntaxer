@@ -18,6 +18,8 @@ class SyntaxerCLI
     options.warnings    = false
     options.rails       = false
     options.jslint      = false
+    options.wizzard     = false
+    options.config      = ''
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
@@ -73,6 +75,10 @@ class SyntaxerCLI
         options.jslint = r
       end
 
+      opts.on("install", "Run wizzard") do
+        options.wizzard = true
+      end
+
       opts.separator ""
       opts.separator "Common options:"
 
@@ -99,7 +105,9 @@ class SyntaxerCLI
 end
 
 options = SyntaxerCLI.parse(ARGV)
-if options.generate.nil?
+if options.wizzard
+  Syntaxer.wizzard(options)
+elsif options.generate.nil?
   Syntaxer.check_syntax(options.instance_variable_get("@table"))
 else
   Syntaxer.make_hook(options.instance_variable_get("@table"))
