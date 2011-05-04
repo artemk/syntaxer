@@ -29,7 +29,7 @@ Given /^some js script$/ do
 end
 
 Given /^installed hook in rails context$/ do
-  run_simple("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -i -r git --hook --rails")
+  run_simple("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -g -r git --hook --rails")
   in_current_dir do
     FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',"syntaxer_rails_rules.dist.rb"),"config/syntaxer.rb")
   end

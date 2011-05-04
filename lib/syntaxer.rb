@@ -5,6 +5,8 @@ require "forwardable"
 require "git"
 require "rainbow"
 require 'progress_bar'
+require 'highline'
+require "highline/import"
 require File.join(%w{syntaxer reader})
 require File.join(%w{syntaxer file_status})
 require File.join(%w{syntaxer checker})
@@ -13,12 +15,15 @@ require File.join(%w{syntaxer repository})
 require File.join(%w{syntaxer language_definition})
 require File.join(%w{syntaxer printer})
 require File.join(%w{syntaxer progress_bar})
+require File.join(%w{syntaxer wizzard})
+require File.join(%w{syntaxer writer})
 
 require File.join(%w{syntaxer railtie}) if defined?(Rails)
 
 module Syntaxer
   DEFAULT_FILES_MASK = "**/*"
   SYNTAXER_RULES_FILE = File.join(File.dirname(__FILE__), "..", "syntaxer_rules.dist.rb")
+  SYNTAXER_CONFIG_FILE_NAME = "syntaxer.rb"
   
   class << self
     attr_reader :reader, :repository, :root_path, :results, :warnings, :hook, :jslint
@@ -79,6 +84,7 @@ module Syntaxer
       hook_file = "#{@root_path}/.git/hooks/pre-commit"
       hook_string = "syntaxer -r git --hook"
       hook_string += " -c config/syntaxer.rb" if options[:rails]
+      hook_string += " -c #{options[:config_file]}" unless options[:config_file].nil?
       
       File.open(hook_file, 'w') do |f|
         f.puts hook_string
@@ -87,6 +93,10 @@ module Syntaxer
     rescue Exception => e
       puts e.message.color(:red)
       raise e
+    end
+
+    def wizzard(options)
+      Wizzard.start
     end
     
   end

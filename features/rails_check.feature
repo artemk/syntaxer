@@ -9,7 +9,6 @@ Feature: Check git repository before commit
     When I run `git commit -m "some message"`
     Then the syntaxer shoud stop commit
     And the output should contain "Errors:"
-    And the output should not contain "Running JSLint:"
 
   @repo @rails @jslint
   Scenario: Installation hook in rails environment with jslint feature
