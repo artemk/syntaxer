@@ -93,7 +93,7 @@ Options for usage
   -c, --config          specify config file
   -p, --path            path for syntax check. If this option is not specify it checks files from current directory
   -r, --repo            indicate type of repository. Available git and svn at this time.
-  -g, --generage        generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
+  -g, --generate        generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
   -q, --quite           disable information messages. Is needed when you only want to know the result: 1 or 0
   -l, --loud            informate about every checked file
   -W, --warnings        show warning messages
