@@ -26,6 +26,10 @@ To install syntaxer run
 
   rake syntaxer:install
 
+or run in working dir
+
+  syntaxer --install 
+
 It creates config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
 
 == Standalone usage
@@ -42,9 +46,13 @@ Run syntax checking in another directory recursively. Make sure to add '/' at th
 
 Install hook to git repository in current directory
 
-  syntaxer -i -r git
+  syntaxer -g -r git
 
-Indicate custom config file
+If you want to use custom config in pair with git
+
+  syntaxer -g -r git -c [CONFIG_FILE]
+
+Run syntaxer with custom config file
 
   syntaxer -c config.rb
 
@@ -81,10 +89,11 @@ Languages available for now are: ruby, erb, haml, sass. You can extend this by y
 
 
 Options for usage
+  -i, --install         run install wizzard, preferred method of installation
   -c, --config          specify config file
   -p, --path            path for syntax check. If this option is not specify it checks files from current directory
   -r, --repo            indicate type of repository. Available git and svn at this time.
-  -i, --install         generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
+  -g, --generage        generates pre-commit hook and put it in .git/hooks folder. It checks syntax of languages what are indicated in options file before every commit
   -q, --quite           disable information messages. Is needed when you only want to know the result: 1 or 0
   -l, --loud            informate about every checked file
   -W, --warnings        show warning messages
@@ -108,9 +117,9 @@ You also may indicate custom config file or another options
 
 If where is `javascript` section in config file it will check it and DIR indicated in command line.    
 
-=== To run syntaxer with jslint on your rails project you should run in console:
+=== To run syntaxer with jslint on your rails project you should run in console and choose javascript checking to:
   
-  rake syntaxer:install --jslint
+  rake syntaxer:install
 
 It creates config/syntaxer.rb file with common rails options and config/jslint.rb with jslint options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
 

@@ -3,7 +3,7 @@ module Syntaxer
     # Recreate config DSL string operation general rules and set of
     # languages
     
-    EXCLUDE_PROPERTIES = "executor", "exec_existence", "deferred"
+    EXCLUDE_PROPERTIES = "executor", "exec_existence", "deferred", "name"
 
     # Initializing Writer
     #
@@ -73,7 +73,7 @@ module Syntaxer
     # @param [Syntaxer::Runner, Array] properties
     # @return [String] DSL property string
     def property name, prop
-      return '' if EXCLUDE_PROPERTIES.include?(name) || prop.nil? || (prop.kind_of?(Array) && prop.empty?)
+      return '' if EXCLUDE_PROPERTIES.include?(name.to_s) || prop.nil? || (prop.kind_of?(Array) && prop.empty?)
       
       prop = prop.flatten.map{|p| "'#{p}'"}.join(', ') if prop.respond_to?(:flatten) && name.to_sym != :folders
       prop = @paths.map{|f| "'#{f}'"}.join(',') if name.to_sym == :folders

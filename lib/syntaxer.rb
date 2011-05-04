@@ -84,7 +84,7 @@ module Syntaxer
       hook_file = "#{@root_path}/.git/hooks/pre-commit"
       hook_string = "syntaxer -r git --hook"
       hook_string += " -c config/syntaxer.rb" if options[:rails]
-      hook_string += " -c #{config}" unless options[:config].empty?
+      hook_string += " -c #{options[:config_file]}" unless options[:config_file].nil?
       
       File.open(hook_file, 'w') do |f|
         f.puts hook_string

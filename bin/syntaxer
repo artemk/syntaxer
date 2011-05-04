@@ -19,7 +19,7 @@ class SyntaxerCLI
     options.rails       = false
     options.jslint      = false
     options.wizzard     = false
-    options.config      = ''
+    #options.config      = ''
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
@@ -53,7 +53,7 @@ class SyntaxerCLI
         options.loud = true
       end
 
-      opts.on("-i", "--install", "Write hooks to git") do |r|
+      opts.on("-g", "--generate", "Write hooks to git") do |r|
         options.generate = true
       end
 
@@ -75,7 +75,7 @@ class SyntaxerCLI
         options.jslint = r
       end
 
-      opts.on("install", "Run wizzard") do
+      opts.on("-i", "--install", "Run wizzard") do
         options.wizzard = true
       end
 

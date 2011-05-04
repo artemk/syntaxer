@@ -24,7 +24,13 @@ end
 def create_temp_git_repo
   @dir = Dir.tmpdir + "/#{Time.now.to_i}" + "/git_repo"
   FileUtils.mkdir_p(@dir)
-  return @dir
+  @dir
+end
+
+def create_temp_dir
+  @dir = Dir.tmpdir + "/#{Time.now.to_i}" + "/syntaxer"
+  FileUtils.mkdir_p(@dir)
+  @dir
 end
   
 def create_temp_ruby_project
