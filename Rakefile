@@ -35,6 +35,24 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov = true
 end
 
+namespace :rcov do
+  desc "Run all specs on multiple ruby versions (requires rvm and bundler)"
+  task :portability do
+    %w{1.8.7 1.9.2}.each do |version|
+      system <<-BASH
+        bash -c 'if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+                   source ~/.rvm/scripts/rvm;
+                   rvm use #{version}@syntaxer;
+                   echo "--------- version #{version}@syntaxer ----------\n";
+                   rspec --color spec/*;
+                   cucumber
+                 fi'
+      BASH
+    end
+  end
+end
+
+
 task :default => :spec
 
 require 'yard'

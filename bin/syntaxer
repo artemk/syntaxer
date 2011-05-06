@@ -19,7 +19,7 @@ class SyntaxerCLI
     options.rails       = false
     options.jslint      = false
     options.wizzard     = false
-    #options.config      = ''
+    options.restore     = false # restore git hook, internal gem option
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: syntaxer [options]"
