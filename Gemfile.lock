@@ -54,7 +54,7 @@ DEPENDENCIES
   cucumber
   git
   jeweler (~> 1.5.2)
-  jslint_on_rails
+  jslint_on_rails (>= 1.0.6)
   progress_bar
   rainbow
   rspec (>= 2.5.0)
