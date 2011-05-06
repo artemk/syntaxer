@@ -36,7 +36,7 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
 end
 
 namespace :rcov do
-  desc "Run all specs on multiple ruby versions (requires rvm and bundler)"
+  desc "Run all specs on multiple ruby versions (requires rvm)"
   task :portability do
     %w{1.8.7 1.9.2}.each do |version|
       system <<-BASH
@@ -46,6 +46,8 @@ namespace :rcov do
                    echo "--------- version #{version}@syntaxer ----------\n";
                    rspec --color spec/*;
                    cucumber
+                 else
+                   echo You have no rvm installed or it installed not in home directory. Sorry.
                  fi'
       BASH
     end
