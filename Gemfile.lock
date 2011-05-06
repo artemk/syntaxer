@@ -53,6 +53,7 @@ DEPENDENCIES
   aruba
   cucumber
   git
+  highline
   jeweler (~> 1.5.2)
   jslint_on_rails (>= 1.0.6)
   progress_bar

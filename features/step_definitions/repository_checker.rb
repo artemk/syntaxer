@@ -12,8 +12,8 @@ When /^run `git commit \-m \"some message\"` interactively$/ do
   add_hook
 end
 
-Then /^I run 'syntaxer \-i \-r git'$/ do
-  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -i -r git"), false)
+Then /^I run 'syntaxer \-g \-r git'$/ do
+  run_simple(unescape("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -g -r git"), false)
 end
 
 

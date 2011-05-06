@@ -48,4 +48,4 @@ Feature: Check syntax in plain mode
     When I run 'syntaxer --jslint ./'
     Then the exit status should be 1
     And the output should contain "jslint checking failed"
-    And the output should not contain "Errors:"
+    And the output should contain "Errors:"
