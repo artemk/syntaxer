@@ -4,7 +4,7 @@ module Syntaxer
   class Runner
     include Open3
 
-    attr_accessor :rule, :exec_rule, :condition_var
+    attr_accessor :exec_rule, :language
 
     def initialize exec_rule = nil
       @exec_rule = exec_rule
@@ -13,7 +13,8 @@ module Syntaxer
     class << self
       def javascript
         lambda do
-          c = Syntaxer::Runner.new(rule)
+          c = Syntaxer::Runner.new
+          c.language = 'javascript' # it is using for backward compatibility
           c.extend(Runners::Javascript)
           c
         end
