@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{syntaxer}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["artemk"]
@@ -70,7 +70,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/artemk/syntaxer}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{Syntax checker for ruby and other languages}
   s.test_files = [
     "spec/checker_spec.rb",
