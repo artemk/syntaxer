@@ -50,7 +50,7 @@ namespace :rcov do
                    rvm use #{version}@syntaxer;
                    echo -e "\e[0;33m--------- version #{version}@syntaxer ----------\n\e[0m";
                    rspec --color spec/*;
-                   cucumber
+                   cucumber;
                  else
                    echo You have no rvm installed or it is installed not in home directory.
                  fi'
