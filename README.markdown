@@ -4,7 +4,7 @@
 
 ## Overview
 
-Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository for checking changed and added files only.
+Syntaxer is a gem that gives ability to check syntax of all files in your project at once. It may be used in standalone mode and with git repository for checking changed and added files only.
 It is useful for for rails team, because you need to store only file with rules, and git hook will be generated for you.
 
 ## Installation
@@ -41,9 +41,11 @@ or run in working dir
   syntaxer --install 
 </code></pre>
 
-It creates config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
+This command will run wizard which help you to decide which languages and files should be processed using syntaxer.
 
-## Standalone usage
+At final it will create config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
+
+## Standalone usage (w/o Rails)
 
 Example of usage:
 
@@ -124,47 +126,12 @@ Options for usage
   -h, --help            show help and options describe above.
 </code></pre>
 
-## Syntaxer with jslint
+## Syntaxer for javascript files
 
 You may use syntaxer to check javascript files using jslint (http://github.com/psionides/jslint_on_rails)
 
-It require installed Java and Rhino, you may read about it in jslint gem page.
+Java and Rhino should be installed, you can read about it at jslint gem page.
 
-### For checking js scripts in standalone mode
-
-<pre><code>
-  syntaxer --jslint [DIR]
-</code></pre>
-
-It will be check all scripts under DIR recursively
-
-You also may indicate custom config file or another options
-
-<pre><code>
-  syntaxer -c [CONFIG_FILE] --jslint [DIR]
-</code></pre>
-
-If where is `javascript` section in config file it will check it and DIR indicated in command line.    
-
-### To run syntaxer with jslint on your rails project you should run in console and choose javascript checking to:
-
-<pre><code>
-  rake syntaxer:install
-</code></pre>
-
-It creates config/syntaxer.rb file with common rails options and config/jslint.rb with jslint options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
-
-Javascript section have to be in the following form in config file:
-
-<pre><code>
-  syntaxer do
-    lang :javascript do
-      folders "javascripts/*", "javascripts/**/*"
-      extensions "js"
-      exec_rule Syntaxer::Runner.javascript
-    end
-  end
-</code></pre>
 
 ## Contributing to syntaxer
  
@@ -179,7 +146,6 @@ Javascript section have to be in the following form in config file:
 ## TODO
 
 * Have to fix the problem with only created repository and initial commit with GIT repository
-* Add SVN support
 * Add description on how to add new languages
 
 ## Known problems
