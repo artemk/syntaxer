@@ -1,5 +1,7 @@
 = syntaxer
 
+[![Build Status](http://travis-ci.org/artemk/syntaxer.png)](http://travis-ci.org/artemk/syntaxer)
+
 == Overview
 
 Syntaxer make possible check syntax of scripts. It may be used in standalone mode and with git repository for checking changed and added files only.
