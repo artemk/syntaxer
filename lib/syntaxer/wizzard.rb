@@ -30,7 +30,7 @@ module Syntaxer
       end
 
       if @options[:git]
-        options = {:root_path => @options[:root_path], :repository => :git, :config => config_full_path}
+        options = {:root_path => @options[:root_path], :repository => :git, :config_file => File.join(@options[:config_path], Syntaxer::SYNTAXER_CONFIG_FILE_NAME)}
         options.merge!({:rails => true}) if options[:rails]
         Syntaxer.make_hook(options)
       end
@@ -79,9 +79,9 @@ module Syntaxer
         else
           config_path = ask("Specify where to save syntaxer's config file (./ by default):".color(:yellow))
           config_path = '.' if config_path.empty?
-          config_path = File.expand_path('.')
-          options[:config_dir_exists] = FileTest.directory?(options[:config_path])
-          options[:create_config_dir] = agree("No such directory found #{config_path}. Create it?".color(:green)) unless options[:config_dir_not_exists]
+          expanded_config_path = File.expand_path(config_path)
+          options[:config_dir_exists] = FileTest.directory?(expanded_config_path)
+          options[:create_config_dir] = agree("No such directory found #{expanded_config_path}. Create it?".color(:green)) unless options[:config_dir_not_exists]
         end
 
         options[:rails] = rails
@@ -94,7 +94,6 @@ module Syntaxer
         rescue
           options[:git] = false
         end
-
        
         Wizzard.new(options).run
         
