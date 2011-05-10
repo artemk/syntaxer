@@ -35,6 +35,30 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov = true
 end
 
+namespace :rcov do
+  desc "Run all specs on multiple ruby versions (requires rvm)"
+  task :portability do
+    %w{1.8.7 1.9.2}.each do |version|
+      system <<-BASH
+        bash -c 'if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+                   source ~/.rvm/scripts/rvm;
+                   rvm gemset list | grep syntaxer > /dev/null;
+                   if [ $? -eq 1 ]; then
+                     echo -e "\e[0;31m--------- Please run \033[4mrvm use #{version}@syntaxer --create; gem install bundler; bundle install;\033[0m\e[0;31m to create gemset for tests. Thanks. ----------\n\e[0m"
+                     exit;
+                   fi
+                   rvm use #{version}@syntaxer;
+                   echo -e "\e[0;33m--------- version #{version}@syntaxer ----------\n\e[0m";
+                   rspec --color spec/*;
+                   cucumber;
+                 else
+                   echo You have no rvm installed or it is installed not in home directory.
+                 fi'
+      BASH
+    end
+  end
+end
+
 task :default => :spec
 
 require 'yard'

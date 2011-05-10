@@ -79,17 +79,29 @@ module Syntaxer
       @root_path = options[:root_path]
       raise ArgumentError, 'Indicate repository type' unless options.include?(:repository)
       raise ArgumentError, "SVN is temporarily not supported" if options[:repository].to_sym == :svn
-      
-      repo = Repository.factory(@root_path, options[:repository])
+
       hook_file = "#{@root_path}/.git/hooks/pre-commit"
-      hook_string = "syntaxer -r git --hook"
-      hook_string += " -c config/syntaxer.rb" if options[:rails]
-      hook_string += " -c #{options[:config_file]}" unless options[:config_file].nil?
+      hook_string = 'syntaxer '
+      
+      if options[:restore] && File.exist?(File.join(@root_path,'.syntaxer'))
+        hook_string += File.open(File.join(@root_path,'.syntaxer')).read
+      else
+        repo = Repository.factory(@root_path, options[:repository])
+        hook_string += "-r git --hook"
+        hook_string += " -c config/syntaxer.rb" if options[:rails]
+        hook_string += " -c #{options[:config_file]}" unless options[:config_file].nil?
+      end
       
       File.open(hook_file, 'w') do |f|
         f.puts hook_string
       end
       File.chmod(0755, hook_file)
+
+      # save syntaxer options
+      File.open(File.join(options[:root_path],'.syntaxer'), 'w') do |f|
+        f.write(hook_string.gsub('syntaxer ',''))
+      end
+
     rescue Exception => e
       puts e.message.color(:red)
       raise e
