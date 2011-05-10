@@ -42,7 +42,7 @@ namespace :rcov do
       system <<-BASH
         bash -c 'if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
                    source ~/.rvm/scripts/rvm;
-                   rvm gemset list | grep syntaxer__ > /dev/null;
+                   rvm gemset list | grep syntaxer > /dev/null;
                    if [ $? -eq 1 ]; then
                      echo -e "\e[0;31m--------- Please run \033[4mrvm use #{version}@syntaxer --create; gem install bundler; bundle install;\033[0m\e[0;31m to create gemset for tests. Thanks. ----------\n\e[0m"
                      exit;
@@ -59,7 +59,7 @@ namespace :rcov do
   end
 end
 
-task :default => "rcov:portability"
+task :default => :spec
 
 require 'yard'
 YARD::Rake::YardocTask.new
