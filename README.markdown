@@ -1,6 +1,6 @@
 # syntaxer
 
-[![Build Status](http://travis-ci.org/artemk/syntaxer.png)](http://travis-ci.org/artemk/syntaxer)
+Travis CI - [![Build Status](http://travis-ci.org/artemk/syntaxer.png)](http://travis-ci.org/artemk/syntaxer)
 
 ## Overview
 
@@ -20,7 +20,7 @@ To install syntaxer run
 1) Add to Gemfile
 
 <pre><code>
-    gem "syntaxer"
+    gem "syntaxer", ">=0.5.0"
 </code></pre>
     
 2)
