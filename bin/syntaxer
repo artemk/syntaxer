@@ -7,6 +7,5 @@ require "open3"
 require 'pp'
 require 'syntaxer'
 require 'syntaxer/runner'
-#require 'syntaxer/runner/option_parser'
 
 exit Syntaxer::Runner::CommandLine.run

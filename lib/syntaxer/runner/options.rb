@@ -7,6 +7,7 @@ module Syntaxer
       flag_opt :quite
       flag_opt :warnings
       flag_opt :rails
+      flag_opt :hook
       
       data_opt :config_file, Syntaxer::SYNTAXER_RULES_FILE
       data_opt :root_path, Dir.getwd

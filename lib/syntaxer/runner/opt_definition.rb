@@ -28,6 +28,9 @@ module Syntaxer
             instance_variable_set("@#{name}", default) if instance_variable_get("@#{name}").nil?
             instance_variable_get("@#{name}")
           end
+          define_method("#{name}?") do
+            !instance_variable_get("@#{name}").nil?
+          end
         end
 
         def action_opt name, default = false

@@ -1,15 +1,11 @@
 module Syntaxer
   class RepositoryError < Exception; end
   class GitRepositoryError < RepositoryError; end
-  class SvnRepositoryError < RepositoryError; end
   
   class Repository
     
-    def self.factory(root_path, type_of_repository)
-      case type_of_repository.to_sym
-      when :git then Git.new(root_path)
-      when :svn then Svn.new(root_path)
-      end
+    def self.factory(root_path)
+      Git.new(root_path)
     end
     
   end
@@ -65,15 +61,4 @@ module Syntaxer
 
   end
   
-  
-  class Svn
-    def initialize
-      raise "TDB"    
-    end
-    
-    def changed_files_list
-      raise "TDB"      
-    end
-  end
-
 end

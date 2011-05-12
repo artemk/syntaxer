@@ -75,6 +75,13 @@ describe "Syntaxer::Runner::Options" do
       expect{@opt.test = 'a'}.to raise_error(ArgumentError)
     end
 
+    it "should return true if options is not set" do
+      subject.class_eval do
+        data_opt :blank_opt
+      end
+      @opt.blank_opt?.should eql(false)
+    end
+
   end
 
   context "action options" do

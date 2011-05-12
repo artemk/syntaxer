@@ -7,10 +7,15 @@ module Syntaxer
     autoload :OptDefinition, 'syntaxer/runner/opt_definition'
     autoload :Options, 'syntaxer/runner/options'
     autoload :CommandLine, 'syntaxer/runner/command_line'
-
-    class << self
-      attr_reader :options
+    autoload :ExecRule, "syntaxer/runner/exec_rule"
     
+  
+    class << self
+      attr_reader :options, :reader, :repository
+
+      extend Forwardable
+      def_delegators ExecRule, :javascript, :default
+      
       # Main method to be used for syntax checking. 
       # 
       # @return [Boolean]
@@ -31,13 +36,14 @@ module Syntaxer
           @reader.add_rule rule
         end
   
-        @repository = Repository.factory(@options.root_path, options.repository) unless options.repository.nil?
+        @repository = Repository.factory(@options.root_path, @options.repository) if @options.repository?
   
         $stdmyout = StringIO.new
         checker = Checker.process(self)
-        #Printer.print_result checker
+        Printer.print_result checker
   
-        #exit(1) unless checker.error_files.empty? && $stdmyout.string.empty?
+        exit(STATUS_FAIL) unless checker.error_files.empty? && $stdmyout.string.empty?
+        STATUS_SUCCESS
       end
   
       # This method generate and put hook to .git/hooks

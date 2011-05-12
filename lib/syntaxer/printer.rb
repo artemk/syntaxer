@@ -4,18 +4,22 @@ module Syntaxer
 
   class Printer
     class << self
+
       NON_EXISTENT_RULE_MESSAGE = "exec_rule `%s` for language %s not exists. Skip"
       
       @@bar = nil
       @@not_exists_rules = []
-      attr_accessor :quite, :loud, :mode, :count_of_files
+      @@options = nil
 
-      def setup &block
-        yield self if block_given?
-        if @mode == :hook
+      def setup(options)
+        @@options = options
+      end
+
+      def count_of_files=(count)
+        if @@options.hook?
           @@bar = Syntaxer::ProgressBar.new
         else
-          @@bar = ::ProgressBar.new(@count_of_files, :bar, :counter)
+          @@bar = ::ProgressBar.new(count, :bar, :counter)
         end
       end
 
@@ -26,9 +30,9 @@ module Syntaxer
       def update *args #not_exists_rule = nil, file_status = (status=true;)
         args = args.first
         @@not_exists_rules << args[:rule] if args.include?(:rule) && !@@not_exists_rules.include?(args[:rule])
-        return if @quite
+        return if @@options.quite?
         if args.include?(:file_status)
-          @mode == :hook ? @@bar.increment!(args[:file_status]) : @@bar.increment!
+          @@options.hook? ? @@bar.increment!(args[:file_status]) : @@bar.increment!
         end
         true
       end
@@ -38,9 +42,8 @@ module Syntaxer
       # @param [Array, #each] files
 
       def print_result checker
-        return if @quite
-        puts "\n"
-        puts "Syntax OK".color(:green) if checker.error_files.empty? && $stdmyout.string.empty?
+        return if @@options.quite?
+        UI.message("Syntax OK") if checker.error_files.empty? && $stdmyout.string.empty?
 
         @loud ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
@@ -48,23 +51,22 @@ module Syntaxer
         end
         
         unless @@not_exists_rules.empty?
-          puts "\n"
           @@not_exists_rules.each do |rule|
-            puts (NON_EXISTENT_RULE_MESSAGE % [rule.executor, rule.name]).color(:yellow)
+            UI.alert(NON_EXISTENT_RULE_MESSAGE % [rule.executor, rule.name], :before_nl => true)
           end
         end
         
-        $stderr.puts("\nErrors:"+"\n\t"+$stdmyout.string.color(:red)) unless $stdmyout.string.empty?
+        UI.error("\nErrors:"+"\n\t"+$stdmyout.string) unless $stdmyout.string.empty?
       end
 
       def print_message filestatus
-        return if @quite
-        puts "\n"
-        print filestatus.file_name
-        puts " OK".color(:green) if filestatus.status == :ok && @loud
-        puts "\nErrors:".color(:red) if filestatus.status == :failed
+        return if @@options.quite?
+        UI.info(filestatus.file_name, :after_nl => false)
+        UI.message("OK", :tab => true) if filestatus.status == :ok && @@options.loud?
+
+        UI.warning("Errors", :before_nl => true) if filestatus.status == :failed
         filestatus.errors.each do |error|
-          puts "\t #{error}".color(:red)
+          UI.warning(error, :tab => true)
         end
       end
 

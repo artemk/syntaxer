@@ -7,17 +7,6 @@ require "rainbow"
 require 'progress_bar'
 require 'highline'
 require "highline/import"
-require File.join(%w{syntaxer reader})
-require File.join(%w{syntaxer file_status})
-require File.join(%w{syntaxer checker})
-require File.join(%w{syntaxer runner})
-require File.join(%w{syntaxer repository})
-require File.join(%w{syntaxer language_definition})
-require File.join(%w{syntaxer printer})
-require File.join(%w{syntaxer progress_bar})
-require File.join(%w{syntaxer wizzard})
-require File.join(%w{syntaxer writer})
-
 require File.join(%w{syntaxer railtie}) if defined?(Rails)
 
 module Syntaxer
@@ -25,11 +14,31 @@ module Syntaxer
   SYNTAXER_RULES_FILE = File.join(File.dirname(__FILE__), "..", "syntaxer_rules.dist.rb")
   SYNTAXER_CONFIG_FILE_NAME = "syntaxer.rb"
 
+  STATUS_SUCCESS = 0
+  STATUS_FAIL = 1
+
   autoload :UI, "syntaxer/ui"
   autoload :Runner, 'syntaxer/runner'
-  
+  autoload :Checker, "syntaxer/checker"
+  autoload :RepoChecker, "syntaxer/checker"
+  autoload :PlainChecker, "syntaxer/checker"
+  autoload :ProgressBar, "syntaxer/progress_bar"
+  autoload :Reader, "syntaxer/reader"
+  autoload :Repository, "syntaxer/repository"
+  autoload :Printer, "syntaxer/printer"
+  autoload :FileStatus, "syntaxer/file_status"
+  autoload :Repository, "syntaxer/repository"
+  autoload :LanguageDefinition, "syntaxer/language_definition"
+  autoload :LanguageRules, "syntaxer/language_definition"
+
+  class << self
+    attr_reader :options
+    
+    def setup options
+      @options = options
+      UI.setup(@options)
+      Printer.setup(@options)
+    end
+
+  end
 end
-# 
-# Syntaxer.configure do |config|
-#   config.root = File.expand_path(File.dirname(__FILE__) + '../..')
-# end
