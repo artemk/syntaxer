@@ -4,8 +4,7 @@ Travis CI - [![Build Status](http://travis-ci.org/artemk/syntaxer.png)](http://t
 
 ## Overview
 
-Syntaxer is a gem that gives ability to check syntax of all files in your project at once. It may be used in standalone mode and with git repository for checking changed and added files only.
-It is useful for for rails team, because you need to store only file with rules, and git hook will be generated for you.
+Syntaxer is a gem that provides you with ability to check syntax of all files in your project at once. It may be used in standalone mode and with git repository only for checking changed and added files. It is useful for rails team because you need to store only file with rules and git hook will be generated for you.
 
 ## Installation
 
@@ -23,13 +22,13 @@ To install syntaxer run
     gem "syntaxer", ">=0.5.0"
 </code></pre>
     
-2)
+2) run the following command in terminal
 
 <pre><code>
     bundle install
 </code></pre>
 
-3) 
+3) run the following command in terminal
 
 <pre><code>
   rake syntaxer:install
@@ -43,7 +42,7 @@ or run in working dir
 
 This command will run wizard which help you to decide which languages and files should be processed using syntaxer.
 
-At final it will create config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
+Finally it will create config/syntaxer.rb file with common rails options, you may edit it as you wish, and .git/hooks/pre-commit script, which will run syntax checking before every commit.
 
 ## Standalone usage (w/o Rails)
 
