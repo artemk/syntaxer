@@ -2,41 +2,26 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Syntaxer::Runner" do
   subject{Syntaxer::Runner}
-  
-  context "default runner" do
-    
-    it "should return Syntaxer::Runner" do
-      subject.default("ruby -c %filename%").should be_instance_of(Syntaxer::Runner)
+
+  context "#check_syntax" do
+
+    before(:each) do
+      @opt = subject::Options.new
+      @opt.config_file = syntaxer_rules_example_file
+      Syntaxer::Printer.setup(@opt)
+
+      checker = double
+      checker.stub(:error_files){[]}
+      Syntaxer::Checker.stub(:process){checker}
     end
 
-    it "should have run method" do
-      subject.default("ruby -c %filename%").should respond_to(:run)
+    it "should invoke Checker#process" do
+      Syntaxer::Reader::DSLReader.should_receive(:load)
+      Syntaxer::Checker.should_receive(:process)
+      Syntaxer::Printer.should_receive(:print_result)
+      subject.check_syntax(@opt)
     end
 
-    it "should invoke Open3#popen3" do
-      Open3.should_receive(:popen3)
-      subject.default("ruby -c %filename%").run('')
-    end
-
-  end
-
-  context "javascript runner" do
-    subject{Syntaxer::Runner.javascript}
-
-    it "should return Proc" do
-      subject.should be_instance_of(Proc)
-    end
-
-    it "Proc should return Syntaxer::Runner class instance" do
-      subject.call.should be_instance_of(Syntaxer::Runner)
-    end
-
-    it "should invoke run of JSLint::Lint instance" do
-      ins = double()
-      ins.should_receive(:run)
-      JSLint::Lint.should_receive(:new).and_return(ins)
-      subject.call.run('', [])
-    end
   end
 
 end
