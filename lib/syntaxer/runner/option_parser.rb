@@ -23,13 +23,13 @@ module Syntaxer
       OPTIONS = {
         :config   => ["-c", "--config [CONFIG_FILE]", String, "Syntax rules file to be used for syntaxer"],
         :path     => ["-p", "--path [DIR]", String, "If you want to check files not from current place"],
-        :repo     => ["-r", "--repo [TYPE]", ['git'], "Select repository type (git)"],
+        :repo     => ["-r", "--repo", "Run with git"],
         :quite    => ["-q", "--quite", "Run in quite mode"],
         :loud     => ["-l", "--loud", "Run in loud mode"],
         :warnings => ["-w", "--warnings", "Turn warning messages on"],
         :generate => ["-g", "--generate", "Write hooks to git"],
         :hook     => ["-h", "--hook", "Use syntaxer in hook context"],
-        :rails    => ["-r", "--rails", "Use syntaxer with rails"],
+        :rails    => ["-R", "--rails", "Use syntaxer with rails"],
         :jslint   => ["-j", "--jslint [DIR]", String, "Run jslint"],
         :install  => ["-i", "--install", "Run wizzard"]
       }
@@ -44,7 +44,7 @@ module Syntaxer
         
         on(*OPTIONS[:config]) {|config_file| @options.config_file = config_file}
         on(*OPTIONS[:path])   {|path| @options.root_path = path}
-        on(*OPTIONS[:repo])   {|type| @options.repository = type}
+        on(*OPTIONS[:repo])   {|type| @options.repository = true}
         on(*OPTIONS[:quite])  {|quite| @options.quite = true}
         on(*OPTIONS[:loud])   {|loud| @options.loud = true}
         on(*OPTIONS[:warnings])   {|warnings| @options.warnings = true}

@@ -29,18 +29,13 @@ Given /^some js script$/ do
 end
 
 Given /^installed hook in rails context$/ do
-  run_simple("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -g -r git --hook --rails")
-  in_current_dir do
-    FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',"syntaxer_rails_rules.dist.rb"),"config/syntaxer.rb")
-  end
+  run_simple("#{File.join(File.dirname(__FILE__),'..','..','bin','syntaxer')} -g -r --hook --rails")
+  file = create_config_file('config', Syntaxer::Wizzard::FOLDERS_RAILS.to_a)
   run_simple('chmod 755 .git/hooks/pre-commit')
 end
 
 Given /^installed hook in rails context with jslint$/ do
   Given "installed hook in rails context"
-  in_current_dir do
-    FileUtils.cp(File.join(File.dirname(__FILE__),'..','..',"syntaxer_rails_rules_jslint.dist.rb"),"config/syntaxer.rb")
-  end
   run_simple('chmod 755 .git/hooks/pre-commit')
 end
 

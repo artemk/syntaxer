@@ -39,7 +39,6 @@ module Syntaxer
         message = "#{message}\n" if opt[:after_nl]
         message = "#{message}".color(opt[:color]) unless opt[:color].nil?
         stdout.print(message)
-        stdout.flush
       end
 
     end

@@ -43,9 +43,10 @@ module Syntaxer
 
       def print_result checker
         return if @@options.quite?
+        UI.message("\n")
         UI.message("Syntax OK") if checker.error_files.empty? && $stdmyout.string.empty?
 
-        @loud ? (files = checker.all_files) : (files = checker.error_files)
+        @@options.loud? ? (files = checker.all_files) : (files = checker.error_files)
         files.each do |file|
           print_message(file)
         end
@@ -62,13 +63,13 @@ module Syntaxer
       def print_message filestatus
         return if @@options.quite?
         UI.info(filestatus.file_name, :after_nl => false)
-        UI.message("OK", :tab => true) if filestatus.status == :ok && @@options.loud?
+        UI.message(" OK\n", :tab => true, :before_nl => false) if filestatus.status == :ok && @@options.loud?
 
-        UI.warning("Errors", :before_nl => true) if filestatus.status == :failed
+        UI.warning(" Errors:\n", :before_nl => false) if filestatus.status == :failed
         filestatus.errors.each do |error|
           UI.warning(error, :tab => true)
         end
-        UI.info("\r")
+        UI.info("\n\n") if filestatus.status == :failed
       end
 
     end

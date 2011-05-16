@@ -29,14 +29,14 @@ module Syntaxer
       def check_syntax options
         @options = options
         @reader = Reader::DSLReader.load(options.config_file)
-  
+
         if @options.jslint? # if jslint option passed set from command line we have to add new rule with indicated dir
           rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@options.jslint+"*", @options.jslint+"**/*"], nil, nil, nil, true, true)
           rule.exec_rule = Runner.javascript.call
           @reader.add_rule rule
         end
-  
-        @repository = Repository.factory(@options.root_path, @options.repository) if @options.repository?
+
+        @repository = Repository.factory(@options.root_path) if @options.repository?
   
         $stdmyout = StringIO.new
         checker = Checker.process(self)
@@ -65,9 +65,9 @@ module Syntaxer
           hook_string += File.open(File.join(@root_path,'.syntaxer')).read
         else
           repo = Repository.factory(@root_path)
-          hook_string += "-r git --hook"
+          hook_string += "-r --hook"
           hook_string += " -c config/syntaxer.rb" if options.rails?
-          hook_string += " -c #{options.config_file}" unless options.config_file?
+          hook_string += " -c #{options.config_file}" if !options.rails? && !options.config_file?
         end
         
         File.open(hook_file, 'w') do |f|
@@ -79,7 +79,7 @@ module Syntaxer
         File.open(File.join(options.root_path,'.syntaxer'), 'w') do |f|
           f.write(hook_string.gsub('syntaxer ',''))
         end
-  
+        0
       rescue Exception => e
         puts e.message.color(:red)
         raise e

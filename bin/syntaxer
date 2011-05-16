@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 
 require 'rubygems'
 require "open3"
 require 'pp'
 require 'syntaxer'
-require 'syntaxer/runner'
 
 exit Syntaxer::Runner::CommandLine.run

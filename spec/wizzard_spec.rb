@@ -55,7 +55,7 @@ describe "Syntaxer::Wizzard" do
       @options = Syntaxer::Runner::Options.new
       @options.rails = true
       @options.root_path = @working_dir
-      @options.repository = :git
+      @options.repository = true
       @options.config_path = @working_dir + '/config'
       @options.languages = [[:ruby, Syntaxer::Wizzard::FOLDERS_RAILS[:ruby]], [:javascript, Syntaxer::Wizzard::FOLDERS_RAILS[:javascript]]]
       

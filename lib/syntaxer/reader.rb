@@ -42,7 +42,7 @@ module Syntaxer
         #
         # @raise [DSLFileNotFoundError] If file with file is not exists
         def load(*dsl_files)
-          reader = build
+          reader = build(dsl_files.empty? ? false : true)
           dsl_files = [dsl_files].flatten
           dsl_files.each do |file|
             begin

@@ -18,7 +18,7 @@ Feature: Check output of script
     Then I run 'syntaxer -l'
     And the output should contain:
       """
-correct.rb OK
+OK
       """
 
 

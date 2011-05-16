@@ -9,10 +9,10 @@ module Syntaxer
       flag_opt :warnings
       flag_opt :rails
       flag_opt :hook
+      flag_opt :repository
       
       data_opt :config_file, Syntaxer::SYNTAXER_RULES_FILE
       data_opt :root_path, Dir.getwd
-      data_opt :repository, :git
       data_opt :jslint, '.'
 
       action_opt :wizzard

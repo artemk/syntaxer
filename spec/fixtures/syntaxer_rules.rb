@@ -6,6 +6,7 @@ syntaxer do
   end
   
   languages :haml do
+    extensions "haml"
     folders '**/*'  
   end
 

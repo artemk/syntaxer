@@ -69,6 +69,14 @@ module PlainHelpers
     g.commit('second commit')    
   end
 
+  def create_config_file(path, langs)
+    reader = Syntaxer::Reader::DSLReader.build
+    writer = Syntaxer::Writer.new(langs, reader.rules)
+    file = File.join(path, 'syntaxer.rb')
+    write_file(file,writer.get_config)
+    file
+  end
+
 end
 
 World(PlainHelpers)
