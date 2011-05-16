@@ -23,35 +23,33 @@ module Syntaxer
     end
 
     def run
-      FileUtils.mkdir_p(@options[:config_path]) if !@options[:config_dir_exists] && @options[:create_config_dir]
-      config_full_path = File.join(@options[:config_path], Syntaxer::SYNTAXER_CONFIG_FILE_NAME)
+      FileUtils.mkdir_p(@options.config_path) if !@options.config_path_exists? && @options.create_config_dir?
+      config_full_path = File.join(@options.config_path, Syntaxer::SYNTAXER_CONFIG_FILE_NAME)
       File.open(config_full_path, 'w') do |f|
         f.write(config)
       end
 
-      if @options[:git]
-        options = {:root_path => @options[:root_path], :repository => :git, :config_file => File.join(@options[:config_path], Syntaxer::SYNTAXER_CONFIG_FILE_NAME)}
-        options.merge!({:rails => true}) if options[:rails]
-        Syntaxer.make_hook(options)
+      if @options.repository?
+        @options.config_file = File.join(@options.config_path, Syntaxer::SYNTAXER_CONFIG_FILE_NAME)
+        Syntaxer::Runner.make_hook(@options)
       end
 
-      if @options[:rails] && @options[:languages].include?(:javascript)
-        system('rake jslint:copy_config')
+      if @options.rails? && !(@options.languages.detect{|v| v.first == :javascript}).nil?
+        Kernel.system('rake jslint:copy_config')
       end
+      Syntaxer::STATUS_SUCCESS
     end
 
     def config
       reader = Reader::DSLReader.build
-      writer = Writer.new(@options[:languages], reader.rules)
+      writer = Writer.new(@options.languages, reader.rules)
       writer.get_config
     end
     
     class << self
       
       def start
-        options = {}
-        options[:root_path] = Dir.getwd
-        rails = false
+        @options = Runner::Options.new
         say("Some greeting message. Hello God of this computer! Please answer in couple of question:".color(:green))
         
         # ask for the languages to install
@@ -69,37 +67,36 @@ module Syntaxer
           end
         end
 
-        options[:languages] = to_install
+        @options.languages = to_install
 
         # ask for path to save config
         if rails?
           say("Rails application detected. Config file saved to config/synaxer.rb".color(:green))
-          rails = true
+          @options.rails = true
           config_path = "config"
         else
           config_path = ask("Specify where to save syntaxer's config file (./ by default):".color(:yellow))
           config_path = '.' if config_path.empty?
           expanded_config_path = File.expand_path(config_path)
-          options[:config_dir_exists] = FileTest.directory?(expanded_config_path)
-          options[:create_config_dir] = agree("No such directory found #{expanded_config_path}. Create it?".color(:green)) unless options[:config_dir_not_exists]
+          @options.config_path_exists = FileTest.directory?(expanded_config_path)
+          @options.create_config_dir = agree("No such directory found #{expanded_config_path}. Create it?".color(:green)) unless @options.config_path_exists?
         end
 
-        options[:rails] = rails
-        options[:config_path] = config_path
+        @options.config_path = config_path
 
         # trying to detect GIT
         begin
-          g = ::Git.open(options[:root_path])
-          options[:git] =  agree("Found git repo in #{File.expand_path(options[:root_path])}. Would you like install hook to check syntax before every commit? (y/n)".color(:yellow))
+          g = ::Git.open(@options.root_path)
+          @options.repository =  agree("Found git repo in #{File.expand_path(@options.root_path)}. Would you like install hook to check syntax before every commit? (y/n)".color(:yellow))
         rescue
-          options[:git] = false
+          # do nothing here, options.repository? return false by default
         end
        
-        Wizzard.new(options).run
+        status = Wizzard.new(@options).run
         
         # buy message
         say("Syntaxer is configured and installed. You can edit config in #{File.join(config_path, Syntaxer::SYNTAXER_CONFIG_FILE_NAME)}".color(:green))
-
+        status
       rescue Interrupt => e
         # external quit
         puts "\nBuy"

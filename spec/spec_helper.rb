@@ -73,9 +73,10 @@ end
 def add_hook(ruby_repo_dir)
   bin_file = File.join(ROOT,'bin', 'syntaxer')  
   hook_file = File.join(ruby_repo_dir,'.git/hooks/pre-commit')
-  
+
+  config = create_config_file(ruby_repo_dir, [:ruby, ['*/*','**/*']])
   File.open(hook_file, 'w') do |f|
-    f.puts "#{bin_file} -c #{syntaxer_rules_example_file} -r git -p #{ruby_repo_dir} --hook"
+    f.puts "#{bin_file} -c #{config} -r -p #{ruby_repo_dir} --hook"
   end
   
   File.chmod(0755, hook_file)
@@ -89,6 +90,21 @@ end
 
 def syntaxer_rules_example_file file = ''
   File.join(fixtures_path, "#{file.empty? ? 'syntaxer_rules': file}.rb" )
+end
+
+def create_config_file(path, *langs)
+  reader = Syntaxer::Reader::DSLReader.build
+  reader.rules.each do |rule|
+    if langs.detect{|l| l.first == rule.name} && rule.name == :ruby
+      rule.extensions = ['example']
+    end
+  end
+  writer = Syntaxer::Writer.new(langs, reader.rules)
+  file = File.join(path, 'syntaxer.rb')
+  File.open(file,'w') do |f|
+    f.write(writer.get_config)
+  end
+  file
 end
 
 class ArubaHelper

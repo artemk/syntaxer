@@ -1,9 +1,9 @@
 # @author Artyom Kramarenko
 module Syntaxer
   module Reader
-    class DSLFileNotFoundError < Exception; end
-    class DSLError < Exception; end
-    class DSLSyntaxError < DSLError; end
+    DSLFileNotFoundError = Class.new(Exception)
+    DSLError = Class.new(Exception)
+    DSLSyntaxError = Class.new(DSLError)
         
     class DSLReader
 
@@ -19,12 +19,15 @@ module Syntaxer
         self
       end
 
-      def files_count syntaxer
+      # Calculate count of files in plain mode
+      #
+      # @param [Syntaxer] Syntaxer
+      def files_count runner
         @rules.map{ |rule|
           if rule.deferred
             0 # skip such files
           else
-            rule.files_list(syntaxer.root_path).length
+            rule.files_list(runner.options.root_path).length
           end
         }.inject(:+)
       end
@@ -39,7 +42,7 @@ module Syntaxer
         #
         # @raise [DSLFileNotFoundError] If file with file is not exists
         def load(*dsl_files)
-          reader = build
+          reader = build(dsl_files.empty? ? false : true)
           dsl_files = [dsl_files].flatten
           dsl_files.each do |file|
             begin
@@ -142,7 +145,7 @@ module Syntaxer
         if !exec_string.respond_to?(:call) || exec_string.is_a?(String)
           current_rule.executor = exec_string.scan(/\w+/).first
           current_rule.exec_existence = system("which #{current_rule.executor} > /dev/null")
-          exec_rule = Syntaxer::Runner.default(exec_string)
+          exec_rule = Syntaxer::Runner::ExecRule.default(exec_string)
           current_rule.deferred = false
         else
           # if it is proc call it and pass current rule
