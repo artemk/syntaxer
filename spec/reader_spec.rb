@@ -5,6 +5,7 @@ describe "Syntaxer::Reader::DSLReader" do
   context "#build" do
     it "should build from default distr rules files" do
       Syntaxer::Runner.stub(:default)
+      Syntaxer::Runner::ExecRule.stub(:default)
 
       @reader = Syntaxer::Reader::DSLReader.build
       @reader.rules.find(:ruby).should eql(Syntaxer::LanguageDefinition.new(:ruby, ["rb", "rake"], ["Rakefile", "Thorfile", "Gemfile"], ["**/*"], nil, Syntaxer::Runner.default("ruby -c %filename%"), "ruby", true, false))
@@ -121,7 +122,7 @@ describe "Syntaxer::Reader::DSLReader" do
     subject{Syntaxer::Reader::DSLReader.new}
     it "should return Syntaxer::Runner instance" do
       reader = Syntaxer::Reader::DSLReader.load(syntaxer_rules_example_file('syntaxer_rules_jslint'))
-      reader.rules.first.exec_rule.should be_instance_of(Syntaxer::Runner)
+      reader.rules.first.exec_rule.should be_instance_of(Syntaxer::Runner::ExecRule)
     end
   end
     

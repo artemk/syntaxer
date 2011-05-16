@@ -3,23 +3,18 @@ require "observer"
 require 'thread'
 module Syntaxer
   class Checker
-    # include Open3
     include Observable
     extend Forwardable
 
     def_delegators Syntaxer::FileStatus, :error_files, :all_files
     
-    attr_accessor :syntaxer, :reader
+    attr_accessor :runner, :reader
     
-    def initialize(syntaxer, count)
-      Printer.setup do |p|
-        p.count_of_files = count
-        p.mode = syntaxer.hook ? :hook : :default
-      end
-
+    def initialize(runner, count)
+      Printer.count_of_files = count
       add_observer(Printer)
-      @syntaxer = syntaxer
-      @reader = @syntaxer.reader
+      @runner = runner
+      @reader = @runner.reader
       @results = []
     end
 
@@ -27,11 +22,11 @@ module Syntaxer
     #
     # @return [RepoChecker, #process] 
 
-    def self.process(syntaxer)
-      if syntaxer.repository
-        RepoChecker.new(syntaxer).process
+    def self.process(runner)
+      if runner.options.repository?
+        RepoChecker.new(runner).process
       else
-        PlainChecker.new(syntaxer).process
+        PlainChecker.new(runner).process
       end
     end
 
@@ -43,7 +38,7 @@ module Syntaxer
         # notify if not exists
         notify_observers({:rule => rule})
       else
-        if @syntaxer.warnings && rule.name == :ruby
+        if @runner.options.warnings? && rule.name == :ruby
           rule.exec_rule.exec_rule = rule.exec_rule.exec_rule.gsub(/(-\S+)\s/,'\1w ')
         end
         errors = rule.exec_rule.run(file)
@@ -58,28 +53,28 @@ module Syntaxer
 
   class RepoChecker < Checker
 
-    def initialize syntaxer
-      @syntaxer = syntaxer
+    def initialize runner
+      @runner = runner
       count_of_files = 0
       @rule_files = {}
       @deferred_process = []
-      syntaxer.reader.rules.each do |rule|
+      runner.reader.rules.each do |rule|
         @rule_files[rule.name] = {}
         @rule_files[rule.name][:rule] = rule
         @rule_files[rule.name][:files] = []
         rule.extensions.each do |ext|
           files.each do |file|
-            if File.extname(file).gsub(/\./,'') == ext || \
+            if File.extname(file).gsub(/\./,'') == ext || 
               (!rule.specific_files.nil? && !@rule_files[rule.name][:files].include?(file) && rule.specific_files.include?(file))
-              
+            then
               @rule_files[rule.name][:files].push(file)
               count_of_files += 1 if !rule.deferred # skip these files
             end
           end
         end
       end
-      
-      super syntaxer, count_of_files 
+
+      super runner, count_of_files 
     end
 
     # Check syntax in repository directory
@@ -92,14 +87,14 @@ module Syntaxer
           @deferred_process << rule
         else
           rule[:files].each do |file|
-            full_path = File.join(@syntaxer.root_path,file)
+            full_path = File.join(@runner.options.root_path,file)
             check(rule[:rule], full_path)
           end
         end
       end
 
       @deferred_process.each do |rule|
-        rule[:rule].exec_rule.run(@syntaxer.root_path, rule[:files])
+        rule[:rule].exec_rule.run(@runner.options.root_path, rule[:files])
       end
 
       self
@@ -107,14 +102,14 @@ module Syntaxer
 
     private
     def files
-      @syntaxer.repository.changed_and_added_files
+      @runner.repository.changed_and_added_files
     end
   end
 
   class PlainChecker < Checker
 
-    def initialize syntaxer
-      super syntaxer, syntaxer.reader.files_count(syntaxer)
+    def initialize runner
+      super runner, runner.reader.files_count(runner)
     end
 
     # Check syntax in indicated directory
@@ -127,14 +122,14 @@ module Syntaxer
         if rule.deferred
           @deferred_process << rule
         else
-          rule.files_list(@syntaxer.root_path).each do |file|
+          rule.files_list(@runner.options.root_path).each do |file|
             check(rule, file)
           end
         end
       end
       
       @deferred_process.each do |rule|
-        rule.exec_rule.run(@syntaxer.root_path, rule.files_list(@syntaxer.root_path))
+        rule.exec_rule.run(@runner.options.root_path, rule.files_list(@runner.options.root_path))
       end
       
       self
