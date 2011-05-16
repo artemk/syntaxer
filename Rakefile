@@ -10,6 +10,10 @@ end
 require 'rake'
 
 require 'jeweler'
+
+$LOAD_PATH.unshift(File.expand_path(File.join(File.dirname(__FILE__), 'lib')))
+require 'syntaxer/version'
+
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "syntaxer"
@@ -21,6 +25,7 @@ Jeweler::Tasks.new do |gem|
   gem.authors = ["artemk"]
   gem.executables = ["syntaxer"]
   gem.files.include "lib/syntaxer/progress_bar.rb"
+  gem.version = Syntaxer::VERSION
 end
 Jeweler::RubygemsDotOrgTasks.new
 

@@ -8,7 +8,7 @@ module Syntaxer
       
       module ClassMethods
 
-        def flag_opt name, default = false
+        def flag_opt(name, default = false)
           define_method("#{name}=") do |value|
             raise ArgumentError, "Not valid value. Should be true of false" unless value.kind_of?(FalseClass) || value.kind_of?(TrueClass)
             instance_variable_set("@#{name}", value)
@@ -19,7 +19,7 @@ module Syntaxer
           end
         end
 
-        def data_opt name, default = nil, &block
+        def data_opt(name, default = nil, &block)
           define_method("#{name}=") do |value|
             raise ArgumentError, "Not valid value" if block_given? && !block.call(value)
             instance_variable_set("@#{name}", value)
@@ -33,7 +33,7 @@ module Syntaxer
           end
         end
 
-        def action_opt name, default = false
+        def action_opt(name, default = false)
           define_method("#{name}=") do |value|
             raise ArgumentError, "Not valid value. Should be true of false" unless value.kind_of?(FalseClass) || value.kind_of?(TrueClass)
             instance_variable_set("@run_#{name}", value)

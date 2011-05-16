@@ -38,7 +38,7 @@ module Syntaxer
   class << self
     attr_reader :options
     
-    def setup options
+    def setup(options)
       @options = options
       UI.setup(@options)
       Printer.setup(@options)

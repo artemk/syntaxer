@@ -4,7 +4,7 @@ module Syntaxer
 
       attr_accessor :mode
 
-      def setup options, stdout = $stdout
+      def setup(options, stdout = $stdout)
         @mode = :quite if options.quite?
         @mode = :loud if options.loud?
         @stdout = stdout

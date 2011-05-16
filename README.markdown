@@ -146,6 +146,12 @@ Java and Rhino should be installed, you can read about it at jslint gem page.
 
 * Have to fix the problem with only created repository and initial commit with GIT repository
 * Add description on how to add new languages
+* Add screencast
+* Fix quite mode for jslint
+* Add css support
+* Add coffeescript support
+* Add php and java support
+
 
 ## Known problems
 

@@ -50,7 +50,7 @@ module Syntaxer
       
       def start
         @options = Runner::Options.new
-        say("Some greeting message. Hello God of this computer! Please answer in couple of question:".color(:green))
+        say("Hello God of this computer! Please answer in couple of question:".color(:green))
         
         # ask for the languages to install
         to_install = []

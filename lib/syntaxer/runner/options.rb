@@ -3,7 +3,7 @@ module Syntaxer
     class Options
       include Syntaxer::Runner::OptDefinition
 
-      # Genral options
+      # General options
       flag_opt :loud
       flag_opt :quite
       flag_opt :warnings
@@ -17,7 +17,6 @@ module Syntaxer
 
       action_opt :wizzard
       action_opt :restore
-      #action_opt :jslint
       action_opt :make_hook
       action_opt :check_syntax, true
 

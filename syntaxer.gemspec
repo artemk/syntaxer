@@ -5,11 +5,10 @@
 
 Gem::Specification.new do |s|
   s.name = %q{syntaxer}
-  s.version = "0.5.0"
-
+  s.version = Syntaxer::VERSION
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["artemk"]
-  s.date = %q{2011-05-10}
+  s.date = %q{2011-05-11}
   s.default_executable = %q{syntaxer}
   s.description = %q{Syntax checker for ruby and other languages}
   s.email = %q{kramarenko.artyom@gmail.com}
