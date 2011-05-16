@@ -68,6 +68,7 @@ module Syntaxer
         filestatus.errors.each do |error|
           UI.warning(error, :tab => true)
         end
+        UI.info("\r")
       end
 
     end

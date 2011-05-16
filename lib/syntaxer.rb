@@ -7,6 +7,7 @@ require "rainbow"
 require 'progress_bar'
 require 'highline'
 require "highline/import"
+require File.join(%w{syntaxer version})
 require File.join(%w{syntaxer railtie}) if defined?(Rails)
 
 module Syntaxer
@@ -18,12 +19,15 @@ module Syntaxer
   STATUS_FAIL = 1
 
   autoload :UI, "syntaxer/ui"
+  autoload :Git, "syntaxer/repository"
   autoload :Runner, 'syntaxer/runner'
+  autoload :Wizzard, 'syntaxer/wizzard'
   autoload :Checker, "syntaxer/checker"
   autoload :RepoChecker, "syntaxer/checker"
   autoload :PlainChecker, "syntaxer/checker"
   autoload :ProgressBar, "syntaxer/progress_bar"
   autoload :Reader, "syntaxer/reader"
+  autoload :Writer, "syntaxer/writer"
   autoload :Repository, "syntaxer/repository"
   autoload :Printer, "syntaxer/printer"
   autoload :FileStatus, "syntaxer/file_status"

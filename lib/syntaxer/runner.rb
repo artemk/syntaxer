@@ -30,8 +30,8 @@ module Syntaxer
         @options = options
         @reader = Reader::DSLReader.load(options.config_file)
   
-        if @options.run_jslint? # if jslint option passed set from command line we have to add new rule with indicated dir
-          rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@options.path+"*", @options.path+"**/*"], nil, nil, nil, true, true)
+        if @options.jslint? # if jslint option passed set from command line we have to add new rule with indicated dir
+          rule = LanguageDefinition.new(:javascript, %w{js}, nil, [@options.jslint+"*", @options.jslint+"**/*"], nil, nil, nil, true, true)
           rule.exec_rule = Runner.javascript.call
           @reader.add_rule rule
         end
@@ -55,20 +55,19 @@ module Syntaxer
       # @raise ArgumentError if SVN is indicated. SVN is not supported yet.
   
       def make_hook(options)
-        @root_path = options[:root_path]
-        raise ArgumentError, 'Indicate repository type' unless options.include?(:repository)
-        raise ArgumentError, "SVN is temporarily not supported" if options[:repository].to_sym == :svn
+        @root_path = options.root_path
+        raise ArgumentError, 'Indicate repository type' unless options.repository?
   
         hook_file = "#{@root_path}/.git/hooks/pre-commit"
         hook_string = 'syntaxer '
         
-        if options[:restore] && File.exist?(File.join(@root_path,'.syntaxer'))
+        if options.restore? && File.exist?(File.join(@root_path,'.syntaxer'))
           hook_string += File.open(File.join(@root_path,'.syntaxer')).read
         else
-          repo = Repository.factory(@root_path, options[:repository])
+          repo = Repository.factory(@root_path)
           hook_string += "-r git --hook"
-          hook_string += " -c config/syntaxer.rb" if options[:rails]
-          hook_string += " -c #{options[:config_file]}" unless options[:config_file].nil?
+          hook_string += " -c config/syntaxer.rb" if options.rails?
+          hook_string += " -c #{options.config_file}" unless options.config_file?
         end
         
         File.open(hook_file, 'w') do |f|
@@ -77,7 +76,7 @@ module Syntaxer
         File.chmod(0755, hook_file)
   
         # save syntaxer options
-        File.open(File.join(options[:root_path],'.syntaxer'), 'w') do |f|
+        File.open(File.join(options.root_path,'.syntaxer'), 'w') do |f|
           f.write(hook_string.gsub('syntaxer ',''))
         end
   

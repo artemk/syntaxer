@@ -34,11 +34,12 @@ module Syntaxer
       private
       def print(message, opt = {}, stdout = @stdout)
         opt = @opts.update(opt)
-        message = "\t#{message}" if opt[:tab]
+        message = "#{message}" if opt[:tab]
         message = "\n#{message}" if opt[:before_nl] 
         message = "#{message}\n" if opt[:after_nl]
         message = "#{message}".color(opt[:color]) unless opt[:color].nil?
         stdout.print(message)
+        stdout.flush
       end
 
     end

@@ -78,8 +78,8 @@ module Syntaxer
       prop = prop.flatten.map{|p| "'#{p}'"}.join(', ') if prop.respond_to?(:flatten) && name.to_sym != :folders
       prop = @paths.map{|f| "'#{f}'"}.join(',') if name.to_sym == :folders
       
-      prop = "'#{prop.exec_rule}'" if prop.instance_of?(Syntaxer::Runner) && !prop.exec_rule.nil?
-      prop = "Syntaxer::Runner.#{prop.language}" if prop.instance_of?(Syntaxer::Runner) && prop.exec_rule.nil?
+      prop = "'#{prop.exec_rule}'" if prop.instance_of?(Syntaxer::Runner::ExecRule) && !prop.exec_rule.nil?
+      prop = "Syntaxer::Runner.#{prop.language}" if prop.instance_of?(Syntaxer::Runner::ExecRule) && prop.exec_rule.nil?
       
       ' '*4 + "#{name.to_s} #{prop}\n"
     end

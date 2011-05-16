@@ -18,7 +18,7 @@ Feature: Test options
      Method /^I love ruby$/ do
      end
      """
-    When I run 'syntaxer -W'
+    When I run 'syntaxer -w'
     Then the output should contain "warning: ambiguous first argument;"
 
   @plain
@@ -27,5 +27,5 @@ Feature: Test options
       """
       <%php echo 1; %>
       """
-    When I run 'syntaxer -W'
+    When I run 'syntaxer -w'
     Then the output should contain "Syntax OK"
