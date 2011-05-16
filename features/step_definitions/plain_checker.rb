@@ -12,9 +12,9 @@ Then /^I run 'syntaxer([^']*)'$/ do |arg|
 end
 
 When /^I run 'syntaxer \-\-jslint \.\/' and jslint should be invoked$/ do
-  options = OpenStruct.new()
+  options = Syntaxer::Runner::Options.new
   options.restore = false
-  options.languages = :all
+  # options.languages = :all
   options.jslint = './'
   options.config_file = Syntaxer::SYNTAXER_RULES_FILE
   options.root_path = '.'
@@ -30,7 +30,7 @@ When /^I run 'syntaxer \-\-jslint \.\/' and jslint should be invoked$/ do
   Syntaxer::Runner.should_receive(:javascript).and_return(Proc.new{})
   Syntaxer::Checker.stub(:process){checker}
   
-  Syntaxer.check_syntax(options.instance_variable_get("@table"))
+  Syntaxer::Runner.check_syntax(options)
 end
 
 When /^I cd to working directory$/ do
@@ -38,6 +38,6 @@ When /^I cd to working directory$/ do
 end
 
 Then /^the output should be the same as in "(.*)" file$/ do |f|
-  content = IO.readlines(File.join(PlainHelpers::SYNTAXER_ROOT_PATH, f),'').first.to_s
+  content = Syntaxer::VERSION
   Then %{the output should contain exactly "#{content}\n"}
 end

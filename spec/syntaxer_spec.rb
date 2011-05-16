@@ -1,12 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe "Syntaxer" do
-  subject {Syntaxer}
+describe Syntaxer do
+  subject{Syntaxer}
   
-  it {should respond_to(:check_syntax)}
+  it{should respond_to(:setup)}
 
   context "in plain mode" do
-    before(:all) do
+    subject{Syntaxer}
+
+    before(:each) do
       Syntaxer::Printer.stub!(:print_result)
       Syntaxer::Printer.stub!(:print_message)
       Syntaxer::Printer.stub!(:update)
